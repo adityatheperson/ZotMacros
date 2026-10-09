@@ -19,14 +19,14 @@ import androidx.core.view.WindowCompat
 import com.zotmacros.domain.*
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
-@Composable fun FoodSheet(selection: FoodSelection, saving: Boolean, onDismiss: () -> Unit, onSave: (Double, Meal) -> Unit, onDelete: (String) -> Unit) {
+@Composable fun FoodSheet(selection: FoodSelection, saving: Boolean, onDismiss: () -> Unit, onSave: (Double, Meal) -> Unit, onDelete: (String) -> Unit, sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), closing: Boolean = false) {
     var quantity by rememberSaveable(selection.requestId) { mutableStateOf(selection.quantity.toString()) }
     var meal by rememberSaveable(selection.requestId) { mutableStateOf(selection.meal) }
     var confirmDelete by remember { mutableStateOf(false) }
     val amount = quantity.replace(',', '.').toDoubleOrNull()
     val valid = amount != null && validQuantity(amount)
     val totals = if (valid) selection.dish.nutrition.scaled(amount!!) else Nutrition()
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true), containerColor = BlueSurface) {
+    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, containerColor = BlueSurface) {
         val sheetView = LocalView.current
         SideEffect {
             val window = generateSequence(sheetView.parent) { it.parent }
@@ -45,7 +45,7 @@ import com.zotmacros.domain.*
                         Text(selection.dish.name, style = MaterialTheme.typography.headlineMedium)
                         Muted("${hallName(selection.hall)} · ${selection.station} · ${selection.period}")
                     }
-                    IconButton(onClick = onDismiss, enabled = !saving) { Icon(Icons.Outlined.Close, "Close food details") }
+                    IconButton(onClick = onDismiss, enabled = !saving && !closing) { Icon(Icons.Outlined.Close, "Close food details") }
                 }
                 Muted("1 serving = ${selection.dish.serving}")
                 if (Nutrient.entries.all { selection.dish.nutrition[it] == null }) Muted("Nutrition unavailable. You can log this food; daily totals will be incomplete.")
@@ -57,19 +57,19 @@ import com.zotmacros.domain.*
                 }
                 Text("Serving quantity", style = MaterialTheme.typography.titleMedium)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    listOf(0.5, 1.0, 1.5, 2.0).forEach { value -> FilterChip(selected = amount == value, onClick = { quantity = value.toString() }, label = { Text("${number(value, true)}×") }, enabled = !saving) }
-                    FilterChip(selected = amount !in listOf(0.5, 1.0, 1.5, 2.0), onClick = { quantity = "" }, label = { Text("Custom") }, enabled = !saving)
+                    listOf(0.5, 1.0, 1.5, 2.0).forEach { value -> FilterChip(selected = amount == value, onClick = { quantity = value.toString() }, label = { Text("${number(value, true)}×") }, enabled = !saving && !closing) }
+                    FilterChip(selected = amount !in listOf(0.5, 1.0, 1.5, 2.0), onClick = { quantity = "" }, label = { Text("Custom") }, enabled = !saving && !closing)
                 }
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    IconButton(onClick = { quantity = ((amount ?: 1.0) - 0.5).coerceAtLeast(0.1).toString() }, enabled = !saving) { Icon(Icons.Outlined.Remove, "Decrease servings") }
+                    IconButton(onClick = { quantity = ((amount ?: 1.0) - 0.5).coerceAtLeast(0.1).toString() }, enabled = !saving && !closing) { Icon(Icons.Outlined.Remove, "Decrease servings") }
                     OutlinedTextField(quantity, { quantity = it }, Modifier.weight(1f), label = { Text("Servings") }, singleLine = true,
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), isError = !valid, enabled = !saving,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal), isError = !valid, enabled = !saving && !closing,
                         supportingText = if (!valid) ({ Text("Enter more than 0, up to 1,000") }) else null)
-                    IconButton(onClick = { quantity = ((amount ?: 0.0) + 0.5).coerceAtMost(1000.0).toString() }, enabled = !saving) { Icon(Icons.Outlined.Add, "Increase servings") }
+                    IconButton(onClick = { quantity = ((amount ?: 0.0) + 0.5).coerceAtMost(1000.0).toString() }, enabled = !saving && !closing) { Icon(Icons.Outlined.Add, "Increase servings") }
                 }
                 Text("Log to", style = MaterialTheme.typography.titleMedium)
                 FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Meal.entries.forEach { choice -> FilterChip(meal == choice, { meal = choice }, label = { Text(choice.label) }, enabled = !saving) }
+                    Meal.entries.forEach { choice -> FilterChip(meal == choice, { meal = choice }, label = { Text(choice.label) }, enabled = !saving && !closing) }
                 }
                 Text("Nutrition facts", style = MaterialTheme.typography.titleLarge)
                 Nutrient.entries.drop(4).forEach { key ->
@@ -83,10 +83,10 @@ import com.zotmacros.domain.*
                     Attribution(); UciAttribution()
                 } else {
                     Muted("Using the original nutrition saved with this entry.")
-                    TextButton(onClick = { confirmDelete = true }, enabled = !saving) { Icon(Icons.Outlined.DeleteOutline, null); Text("Delete entry") }
+                    TextButton(onClick = { confirmDelete = true }, enabled = !saving && !closing) { Icon(Icons.Outlined.DeleteOutline, null); Text("Delete entry") }
                 }
             }
-            Button(onClick = { if (valid) onSave(amount!!, meal) }, enabled = valid && !saving, modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp).heightIn(min = 54.dp)) {
+            Button(onClick = { if (valid) onSave(amount!!, meal) }, enabled = valid && !saving && !closing, modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp).heightIn(min = 54.dp)) {
                 if (saving) CircularProgressIndicator(Modifier.size(20.dp), strokeWidth = 2.dp)
                 else Text(if (selection.entryId != null) "Save changes" else "Add to Today — ${nutrientText(totals[Nutrient.CALORIES], Nutrient.CALORIES)}")
             }

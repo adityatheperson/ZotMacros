@@ -10,6 +10,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
+@OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 @RunWith(AndroidJUnit4::class)
 class UnknownNutritionTest {
     @get:Rule val compose = createComposeRule()

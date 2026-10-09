@@ -1,5 +1,8 @@
 package com.zotmacros.ui
 
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -45,7 +48,7 @@ import androidx.navigation.compose.*
             val current by nav.currentBackStackEntryAsState()
             val route = current?.destination?.route ?: "Today"
             val destinations = listOf("Today" to Icons.Outlined.Home, "Menu" to Icons.Outlined.Restaurant, "History" to Icons.Outlined.BarChart, "Settings" to Icons.Outlined.Settings)
-            fun navigate(name: String) { nav.navigate(name) { popUpTo(nav.graph.startDestinationId) { saveState = true }; launchSingleTop = true; restoreState = true } }
+            fun navigate(name: String) { if (name == route) return; nav.navigate(name) { popUpTo(nav.graph.startDestinationId) { saveState = true }; launchSingleTop = true; restoreState = true } }
             BoxWithConstraints(Modifier.fillMaxSize()) {
                 val expanded = maxWidth >= 600.dp
                 Row(Modifier.fillMaxSize()) {
@@ -58,7 +61,11 @@ import androidx.navigation.compose.*
                         }
                     }) { padding ->
                         Box(Modifier.padding(padding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
-                            NavHost(nav, "Today", Modifier.widthIn(max = 720.dp).fillMaxSize()) {
+                            NavHost(nav, "Today", Modifier.widthIn(max = 720.dp).fillMaxSize(),
+                                enterTransition = { fadeIn(tween(ZotMotion.EnterMillis)) },
+                                exitTransition = { fadeOut(tween(ZotMotion.ExitMillis)) },
+                                popEnterTransition = { fadeIn(tween(ZotMotion.EnterMillis)) },
+                                popExitTransition = { fadeOut(tween(ZotMotion.ExitMillis)) }) {
                                 composable("Today") { TodayScreen(today, entries, prefs!!, { navigate("Menu") }, vm::edit) }
                                 composable("Menu") { MenuScreen(menu, today, now, prefs!!, entries.filter { it.date == today.toString() }.map { it.dishId }.toSet(), vm::selectHall, { vm.refresh(true) }, vm::openFood) }
                                 composable("History") { HistoryScreen(today, entries, prefs!!, vm::edit) }
@@ -69,6 +76,6 @@ import androidx.navigation.compose.*
                 }
             }
         }
-        selection?.let { FoodSheet(it, saving, vm::closeFood, vm::saveFood, vm::delete) }
+        FoodSheetHost(selection, saving, vm::closeFood, vm::saveFood, vm::delete)
     }
 }

@@ -153,7 +153,7 @@ Food details use a scrollable modal sheet with 20dp horizontal padding and a sav
 
 Custom cards are flat at rest: blue tonal separation and subtle dividers establish grouping, with no custom shadow vocabulary. Material sheets, dialogs, and controls retain their native elevation and scrim behavior. Do not replace those platform effects with a web shadow system.
 
-The calorie ring animates its numerical progress using Compose `animateFloatAsState` with its default animation specification. History scrolls the selected day into view. Other transitions and press/focus states use Material behavior; there are no custom durations or easing tokens.
+Tab destinations crossfade with 180ms arrivals and 120ms exits. Calorie-ring and macro-bar progress share a 280ms FastOutSlowIn tween; numeric totals remain immediate and truthful. Food sheets retain their content until the native Material hide transition finishes, including after a save. All finite animations inherit Android’s animator duration scale, including Remove animations. History scrolling and control feedback retain Material behavior. Motion tokens live in `ui/Motion.kt`.
 
 ## Shapes
 

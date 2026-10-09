@@ -55,7 +55,7 @@ fun nutrientText(value: Double?, nutrient: Nutrient): String = value?.let { "${n
 }
 @Composable fun CalorieRing(total: NutrientTotal, goal: Double) {
     val amount = total.value ?: 0.0
-    val ratio by animateFloatAsState((amount / goal).toFloat().coerceIn(0f, 1f), label = "Calories")
+    val ratio by animateFloatAsState((amount / goal).toFloat().coerceIn(0f, 1f), animationSpec = ZotMotion.progress(), label = "Calories")
     val track = MaterialTheme.colorScheme.surface
     Box(Modifier.fillMaxWidth().padding(vertical = 12.dp), contentAlignment = Alignment.Center) {
         Canvas(Modifier.size(230.dp).semantics { contentDescription = "${number(total.value)} of ${number(goal)} calories${if (total.isPartial) ", partial total" else ""}" }) {
@@ -82,12 +82,14 @@ fun nutrientText(value: Double?, nutrient: Nutrient): String = value?.let { "${n
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         listOf(Nutrient.PROTEIN to ProteinColor, Nutrient.CARBS to Gold, Nutrient.FAT to FatColor).forEach { (key, color) ->
             val total = totals.getValue(key)
+            val progress by animateFloatAsState(((total.value ?: 0.0) / prefs.goal(key)).toFloat().coerceIn(0f, 1f),
+                animationSpec = ZotMotion.progress(), label = "${key.label} progress")
             Surface(Modifier.weight(1f), shape = RoundedCornerShape(20.dp), color = MaterialTheme.colorScheme.surface) {
                 Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
                     Text(key.label, color = color, style = MaterialTheme.typography.labelLarge)
                     Text(number(total.value, true) + if (total.isPartial && total.value != null) "+" else "", style = MaterialTheme.typography.titleLarge)
                     Muted("/ ${number(prefs.goal(key))} g")
-                    LinearProgressIndicator(progress = { ((total.value ?: 0.0) / prefs.goal(key)).toFloat().coerceIn(0f, 1f) }, modifier = Modifier.fillMaxWidth().height(6.dp), color = color, trackColor = BlueBackground)
+                    LinearProgressIndicator(progress = { progress }, modifier = Modifier.fillMaxWidth().height(6.dp), color = color, trackColor = BlueBackground)
                 }
             }
         }
