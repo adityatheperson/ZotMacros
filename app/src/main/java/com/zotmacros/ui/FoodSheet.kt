@@ -48,10 +48,11 @@ import com.zotmacros.domain.*
                     IconButton(onClick = onDismiss, enabled = !saving) { Icon(Icons.Outlined.Close, "Close food details") }
                 }
                 Muted("1 serving = ${selection.dish.serving}")
+                if (Nutrient.entries.all { selection.dish.nutrition[it] == null }) Muted("Nutrition unavailable. You can log this food; daily totals will be incomplete.")
                 Text("${number(totals[Nutrient.CALORIES])} kcal", style = MaterialTheme.typography.displayMedium)
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     listOf(Nutrient.PROTEIN to ProteinColor, Nutrient.CARBS to Gold, Nutrient.FAT to FatColor).forEach { (key, color) ->
-                        Column(Modifier.weight(1f)) { Text(nutrientText(totals[key], key), color = color, style = MaterialTheme.typography.titleLarge); Text(key.label, color = color) }
+                        Column(Modifier.weight(1f)) { Text(if (totals[key] == null) "—" else nutrientText(totals[key], key), color = color, style = MaterialTheme.typography.titleLarge); Text(key.label, color = color) }
                     }
                 }
                 Text("Serving quantity", style = MaterialTheme.typography.titleMedium)
@@ -79,7 +80,7 @@ import com.zotmacros.domain.*
                     Text("Ingredients & allergens", style = MaterialTheme.typography.titleMedium)
                     Muted(selection.dish.ingredients?.takeIf { it.isNotBlank() } ?: "Ingredients unavailable")
                     Muted(if (selection.dish.allergens.isNotEmpty()) "Contains: ${selection.dish.allergens.joinToString()}" else "No allergen information reported. Check with dining staff.")
-                    Attribution()
+                    Attribution(); UciAttribution()
                 } else {
                     Muted("Using the original nutrition saved with this entry.")
                     TextButton(onClick = { confirmDelete = true }, enabled = !saving) { Icon(Icons.Outlined.DeleteOutline, null); Text("Delete entry") }

@@ -18,6 +18,20 @@ class DiaryPersistenceTest {
     @Before fun setup() { context.deleteDatabase("test-diary.db"); db = open() }
     private fun open() = Room.databaseBuilder(context, ZotDatabase::class.java, "test-diary.db").build()
     @After fun close() { db.close(); context.deleteDatabase("test-diary.db") }
+    @Test fun unknownChickenPersistsAndKeepsTotalsIncomplete() = runBlocking {
+        val repository = DiaryRepository(db.diary())
+        val dish = Dish("1923_101628_A4290_1", "Boom Boom Popcorn Chicken")
+        assertTrue(repository.add("unknown-chicken", dish, "anteatery", "Fire and Ice", "Lunch", Meal.LUNCH, 1.5))
+        db.close(); db = open()
+        val reopened = DiaryRepository(db.diary())
+        reopened.edit("unknown-chicken", 2.0, Meal.LUNCH)
+        val entry = db.diary().find("unknown-chicken")!!
+        assertEquals("Fire and Ice", entry.station)
+        assertNull(entry.totals[Nutrient.CALORIES])
+        val total = aggregate(listOf(entry.totals, Nutrition(mapOf(Nutrient.CALORIES to 100.0))))[Nutrient.CALORIES]!!
+        assertEquals(100.0, total.value!!, 0.0)
+        assertEquals(1, total.missing)
+    }
     @Test fun addReopenEditAndDeletePreserveNutritionSnapshot() = runBlocking {
         val dish = Dish("test-dish", "Test food", "100 g", Nutrition(mapOf(Nutrient.CALORIES to 165.0, Nutrient.PROTEIN to 31.0)))
         val repository = DiaryRepository(db.diary())

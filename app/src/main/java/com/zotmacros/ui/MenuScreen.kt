@@ -45,7 +45,7 @@ import java.time.format.DateTimeFormatter
             }
             item { OutlinedTextField(query, onValueChange = { query = it }, modifier = Modifier.fillMaxWidth(), singleLine = true,
                 placeholder = { Text("Search this menu") }, leadingIcon = { Icon(Icons.Outlined.Search, null) }, shape = RoundedCornerShape(16.dp)) }
-            item { Attribution() }
+            item { Attribution(); UciAttribution() }
             if (stations.isNotEmpty()) item { LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 item { FilterChip(effectiveStation == null, { selectedStation = null }, label = { Text("All stations") }) }
                 items(stations, key = { it.stationId }) { s -> FilterChip(effectiveStation == s.stationId, { selectedStation = s.stationId }, label = { Text(s.station) }) }
@@ -80,6 +80,7 @@ import java.time.format.DateTimeFormatter
                                 Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                                     Text(food.dish.name, style = MaterialTheme.typography.titleMedium)
                                     Muted(food.dish.serving)
+                                    if (Nutrient.entries.all { food.dish.nutrition[it] == null }) Muted("Nutrition unavailable")
                                     Text(nutrientText(food.dish.nutrition[Nutrient.CALORIES], Nutrient.CALORIES), style = MaterialTheme.typography.labelLarge)
                                     Text("P ${number(food.dish.nutrition[Nutrient.PROTEIN], true)} g  ·  C ${number(food.dish.nutrition[Nutrient.CARBS], true)} g  ·  F ${number(food.dish.nutrition[Nutrient.FAT], true)} g", color = MaterialTheme.colorScheme.onSurfaceVariant, style = MaterialTheme.typography.bodySmall)
                                     if (food.dish.id in loggedIds) Text("✓ Logged today", color = Gold, style = MaterialTheme.typography.labelMedium)

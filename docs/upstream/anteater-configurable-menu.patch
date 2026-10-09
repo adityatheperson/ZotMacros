@@ -1,0 +1,87 @@
+diff --git a/apps/data-pipeline/dining-scraper/src/fetch-menu-week-view.ts b/apps/data-pipeline/dining-scraper/src/fetch-menu-week-view.ts
+index 800ba99..25bbae2 100644
+--- a/apps/data-pipeline/dining-scraper/src/fetch-menu-week-view.ts
++++ b/apps/data-pipeline/dining-scraper/src/fetch-menu-week-view.ts
+@@ -1,5 +1,6 @@
+ import type { diningDish, diningNutritionInfo } from "@packages/db/schema";
+ import z from "zod";
++import { menuEntries } from "./menu-entries.ts";
+ import { type RestaurantId, restaurantIDToURL } from "./model.ts";
+ import { queryAdobeECommerce } from "./query.ts";
+ 
+@@ -16,6 +17,7 @@ const getLocationRecipesSchema = z.object({
+                   id: z.number(),
+                   skus: z.object({
+                     simple: z.array(z.string()),
++                    configurable: z.array(z.object({sku:z.string(), variants:z.array(z.string())})).optional(),
+                   }),
+                 }),
+               ),
+@@ -94,6 +96,7 @@ query getLocationRecipes(
+           id
+           skus {
+             simple
++            configurable { sku variants }
+           }
+         }
+       }
+@@ -267,12 +270,12 @@ export async function fetchMenuWeekView(
+ 
+   for (const { date, stations } of dateSkuMap) {
+     for (const { id: stationId, skus } of stations) {
+-      for (const sku of skus.simple) {
++      for (const { sku, id } of menuEntries(stationId, skus)) {
+         const item = parsedProducts[sku];
+ 
+         const dish = {
+           dish: {
+-            id: sku,
++            id,
+             name: item?.name ?? "UNIDENTIFIED",
+             stationId: stationId.toString(),
+             description: item?.description ?? "",
+@@ -280,7 +283,7 @@ export async function fetchMenuWeekView(
+             category: item?.category ?? "",
+             imageUrl: item?.imageUrl,
+           },
+-          nutritionInfo: item?.nutritionInfo ?? {},
++          nutritionInfo: { ...item?.nutritionInfo, dishId: id },
+           recipeAllergenCodes: item?.allergenIntolerances ?? new Set<number>(),
+           recipePreferenceCodes: item?.recipePreferences ?? new Set<number>(),
+         } as FetchedDish;
+diff --git a/apps/data-pipeline/dining-scraper/src/menu-entries.ts b/apps/data-pipeline/dining-scraper/src/menu-entries.ts
+new file mode 100644
+--- /dev/null
++++ b/apps/data-pipeline/dining-scraper/src/menu-entries.ts
+@@ -0,0 +1,15 @@
++type StationSkus = { simple: string[]; configurable?: { sku: string; variants: string[] }[] };
++
++/** Configurable parents have no unambiguous serving. Keep their own attributes,
++ * and scope new identities by station because diningDish owns stationId. */
++export function menuEntries(stationId: number, skus: StationSkus) {
++  return [
++    ...new Set(skus.simple),
++    ...new Set((skus.configurable ?? [])
++      .filter((parent) => !parent.variants.some((sku) => skus.simple.includes(sku)))
++      .map((parent) => parent.sku)),
++  ].map((sku) => ({
++    sku,
++    id: skus.simple.includes(sku) ? sku : `${sku}:station:${stationId}`,
++  }));
++}
+diff --git a/apps/data-pipeline/dining-scraper/src/menu-entries.test.mjs b/apps/data-pipeline/dining-scraper/src/menu-entries.test.mjs
+new file mode 100644
+--- /dev/null
++++ b/apps/data-pipeline/dining-scraper/src/menu-entries.test.mjs
+@@ -0,0 +1,11 @@
++import { test } from 'node:test';
++import assert from 'node:assert/strict';
++import { menuEntries } from './menu-entries.ts';
++test('preserves simple identities and configurable parents once per station', () => {
++ const skus={simple:['known','known'],configurable:[{sku:'chicken',variants:['large','small']},{sku:'chicken',variants:[]}]};
++ assert.deepEqual(menuEntries(1926,skus),[{sku:'known',id:'known'},{sku:'chicken',id:'chicken:station:1926'}]);
++ assert.notEqual(menuEntries(1932,skus)[1].id,menuEntries(1926,skus)[1].id);
++});
++test('does not duplicate a simple variant as its configurable parent',()=>{
++ assert.deepEqual(menuEntries(1926,{simple:['small'],configurable:[{sku:'chicken',variants:['small','large']}]}),[{sku:'small',id:'small'}]);
++});

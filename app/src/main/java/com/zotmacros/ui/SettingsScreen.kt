@@ -50,7 +50,7 @@ import com.zotmacros.domain.hallName
         item { ToggleRow("Auto-refresh menus", "Refresh while the app is open, every 15 minutes", prefs.autoRefresh) { onSave(prefs.copy(autoRefresh = it)) } }
         item { ToggleRow("Haptic feedback", "A subtle confirmation when food is saved", prefs.haptics) { onSave(prefs.copy(haptics = it)) } }
         item { HorizontalDivider(); TextButton(onClick = { clear = true }) { Text("Clear local food history") } }
-        item { Text("About ZotMacros", style = MaterialTheme.typography.titleLarge); Muted("Fuel your day. Track your macros.\nVersion 1.0 · Built for UCI students\nYour food diary stays on this device. No account required."); Attribution(); Muted("Independent student app. Not an official UC Irvine application. Dining information may change; confirm ingredients and allergens with dining staff.") }
+        item { Text("About ZotMacros", style = MaterialTheme.typography.titleLarge); Muted("Fuel your day. Track your macros.\nVersion 1.0.1 · Built for UCI students\nYour food diary stays on this device. No account required."); Attribution(); UciAttribution(); Muted("Independent student app. Not an official UC Irvine application. Dining information may change; confirm ingredients and allergens with dining staff.") }
     }
     if (clear) AlertDialog(onDismissRequest = { clear = false }, title = { Text("Clear all food history?") }, text = { Text("This permanently deletes every saved food entry on this device. Your goals and preferences will stay.") },
         confirmButton = { TextButton(onClick = { clear = false; onClear() }) { Text("Clear history") } }, dismissButton = { TextButton(onClick = { clear = false }) { Text("Cancel") } })

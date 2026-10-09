@@ -12,7 +12,7 @@ import javax.inject.Singleton
 
 @Singleton
 class MenuRepository @Inject constructor(
-    private val api: DiningApi, private val parser: DiningParser, private val dao: MenuDao, private val json: Json
+    private val api: DiningApi, private val parser: DiningParser, private val dao: MenuDao, private val json: Json, private val supplement: SupplementSource = SupplementSource(json, enabled = false)
 ) {
     private val mutex = Mutex()
     private var stations: Map<String, Map<String, String>> = emptyMap()
@@ -20,19 +20,30 @@ class MenuRepository @Inject constructor(
     private fun decode(cache: CachedMenu?): MenuSnapshot? = cache?.let { runCatching { json.decodeFromString<MenuSnapshot>(it.payload) }.getOrNull() }
     suspend fun load(hall: String, date: String, force: Boolean = false): MenuResult = mutex.withLock {
         val exact = decode(dao.get(hall, date))
-        if (!force && exact != null && System.currentTimeMillis() - exact.fetchedAt < 15 * 60_000) return@withLock MenuResult(exact, cached = true)
+        if (!force && exact != null && (!supplement.enabled || exact.supplementVerified) && System.currentTimeMillis() - exact.fetchedAt < 15 * 60_000) return@withLock MenuResult(exact, cached = true)
         try {
             val stationNames = stations[hall] ?: parser.stations(api.restaurants(), hall).also { stations = stations + (hall to it) }
             val periods = parser.day(api.day(hall, date), hall)
             val ids = periods.flatMap { it.stations.values.flatten() }.distinct()
             val dishes = ids.chunked(20).flatMap { parser.dishes(api.dishes(it.joinToString(","))) }.associateBy { it.id }
-            val snapshot = MenuSnapshot(hall, date, System.currentTimeMillis(), periods.map { period ->
+            var snapshot = MenuSnapshot(hall, date, System.currentTimeMillis(), periods.map { period ->
                 MenuPeriod(period.id, period.name, period.start, period.end, period.stations.flatMap { (stationId, dishIds) ->
                     dishIds.mapNotNull { id -> dishes[id]?.let { MenuFood(it, stationId, stationNames[stationId] ?: "Station $stationId") } }
                 })
             }, ids.count { it !in dishes })
-            dao.put(CachedMenu(hall, date, snapshot.fetchedAt, json.encodeToString(snapshot)))
-            MenuResult(snapshot)
+            var supplementError: String? = null
+            if (supplement.enabled) {
+                try {
+                    snapshot = supplement.complete(snapshot)
+                } catch (e: CancellationException) { throw e }
+                catch (e: Exception) {
+                    // Keep the last complete exact-date menu rather than silently dropping foods.
+                    if (exact != null) return@withLock MenuResult(exact, "UCI menu supplement unavailable. Showing saved menu; retry to refresh.", cached = true)
+                    supplementError = "UCI menu supplement unavailable. Some foods may be missing; retry to refresh."
+                }
+            }
+            if (supplementError == null) dao.put(CachedMenu(hall, date, snapshot.fetchedAt, json.encodeToString(snapshot)))
+            MenuResult(snapshot, supplementError)
         } catch (e: CancellationException) { throw e }
         catch (e: Exception) {
             val message = when (e) {
