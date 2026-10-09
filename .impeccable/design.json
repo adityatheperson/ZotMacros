@@ -1,0 +1,374 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-08T16:35:06.816911+00:00",
+  "title": "Design System: ZotMacros",
+  "extensions": {
+    "colorMeta": {
+      "gold": {
+        "role": "primary",
+        "displayName": "Gold",
+        "tonalRamp": [
+          "oklch(15% 0.1758 90.66)",
+          "oklch(26% 0.1758 90.66)",
+          "oklch(38% 0.1758 90.66)",
+          "oklch(49% 0.1758 90.66)",
+          "oklch(61% 0.1758 90.66)",
+          "oklch(72% 0.1758 90.66)",
+          "oklch(84% 0.1758 90.66)",
+          "oklch(95% 0.1758 90.66)"
+        ]
+      },
+      "blue-background": {
+        "role": "neutral",
+        "displayName": "Blue Background",
+        "tonalRamp": [
+          "oklch(15% 0.0897 252.47)",
+          "oklch(26% 0.0897 252.47)",
+          "oklch(38% 0.0897 252.47)",
+          "oklch(49% 0.0897 252.47)",
+          "oklch(61% 0.0897 252.47)",
+          "oklch(72% 0.0897 252.47)",
+          "oklch(84% 0.0897 252.47)",
+          "oklch(95% 0.0897 252.47)"
+        ]
+      },
+      "blue-surface": {
+        "role": "neutral",
+        "displayName": "Blue Surface",
+        "tonalRamp": [
+          "oklch(15% 0.1203 256.51)",
+          "oklch(26% 0.1203 256.51)",
+          "oklch(38% 0.1203 256.51)",
+          "oklch(49% 0.1203 256.51)",
+          "oklch(61% 0.1203 256.51)",
+          "oklch(72% 0.1203 256.51)",
+          "oklch(84% 0.1203 256.51)",
+          "oklch(95% 0.1203 256.51)"
+        ]
+      },
+      "protein": {
+        "role": "secondary",
+        "displayName": "Protein",
+        "tonalRamp": [
+          "oklch(15% 0.1171 224.04)",
+          "oklch(26% 0.1171 224.04)",
+          "oklch(38% 0.1171 224.04)",
+          "oklch(49% 0.1171 224.04)",
+          "oklch(61% 0.1171 224.04)",
+          "oklch(72% 0.1171 224.04)",
+          "oklch(84% 0.1171 224.04)",
+          "oklch(95% 0.1171 224.04)"
+        ]
+      },
+      "fat": {
+        "role": "tertiary",
+        "displayName": "Fat",
+        "tonalRamp": [
+          "oklch(15% 0.1314 202.30)",
+          "oklch(26% 0.1314 202.30)",
+          "oklch(38% 0.1314 202.30)",
+          "oklch(49% 0.1314 202.30)",
+          "oklch(61% 0.1314 202.30)",
+          "oklch(72% 0.1314 202.30)",
+          "oklch(84% 0.1314 202.30)",
+          "oklch(95% 0.1314 202.30)"
+        ]
+      },
+      "ink-on-gold": {
+        "role": "neutral",
+        "displayName": "Ink On Gold",
+        "tonalRamp": [
+          "oklch(15% 0.0594 251.51)",
+          "oklch(26% 0.0594 251.51)",
+          "oklch(38% 0.0594 251.51)",
+          "oklch(49% 0.0594 251.51)",
+          "oklch(61% 0.0594 251.51)",
+          "oklch(72% 0.0594 251.51)",
+          "oklch(84% 0.0594 251.51)",
+          "oklch(95% 0.0594 251.51)"
+        ]
+      },
+      "gold-container": {
+        "role": "neutral",
+        "displayName": "Gold Container",
+        "tonalRamp": [
+          "oklch(15% 0.0971 90.46)",
+          "oklch(26% 0.0971 90.46)",
+          "oklch(38% 0.0971 90.46)",
+          "oklch(49% 0.0971 90.46)",
+          "oklch(61% 0.0971 90.46)",
+          "oklch(72% 0.0971 90.46)",
+          "oklch(84% 0.0971 90.46)",
+          "oklch(95% 0.0971 90.46)"
+        ]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Foreground",
+        "tonalRamp": [
+          "oklch(15% 0.0099 267.36)",
+          "oklch(26% 0.0099 267.36)",
+          "oklch(38% 0.0099 267.36)",
+          "oklch(49% 0.0099 267.36)",
+          "oklch(61% 0.0099 267.36)",
+          "oklch(72% 0.0099 267.36)",
+          "oklch(84% 0.0099 267.36)",
+          "oklch(95% 0.0099 267.36)"
+        ]
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Muted",
+        "tonalRamp": [
+          "oklch(15% 0.0400 258.81)",
+          "oklch(26% 0.0400 258.81)",
+          "oklch(38% 0.0400 258.81)",
+          "oklch(49% 0.0400 258.81)",
+          "oklch(61% 0.0400 258.81)",
+          "oklch(72% 0.0400 258.81)",
+          "oklch(84% 0.0400 258.81)",
+          "oklch(95% 0.0400 258.81)"
+        ]
+      },
+      "surface-variant": {
+        "role": "neutral",
+        "displayName": "Surface Variant",
+        "tonalRamp": [
+          "oklch(15% 0.1012 253.00)",
+          "oklch(26% 0.1012 253.00)",
+          "oklch(38% 0.1012 253.00)",
+          "oklch(49% 0.1012 253.00)",
+          "oklch(61% 0.1012 253.00)",
+          "oklch(72% 0.1012 253.00)",
+          "oklch(84% 0.1012 253.00)",
+          "oklch(95% 0.1012 253.00)"
+        ]
+      },
+      "outline": {
+        "role": "neutral",
+        "displayName": "Outline",
+        "tonalRamp": [
+          "oklch(15% 0.0708 250.76)",
+          "oklch(26% 0.0708 250.76)",
+          "oklch(38% 0.0708 250.76)",
+          "oklch(49% 0.0708 250.76)",
+          "oklch(61% 0.0708 250.76)",
+          "oklch(72% 0.0708 250.76)",
+          "oklch(84% 0.0708 250.76)",
+          "oklch(95% 0.0708 250.76)"
+        ]
+      },
+      "outline-variant": {
+        "role": "neutral",
+        "displayName": "Outline Variant",
+        "tonalRamp": [
+          "oklch(15% 0.1041 252.72)",
+          "oklch(26% 0.1041 252.72)",
+          "oklch(38% 0.1041 252.72)",
+          "oklch(49% 0.1041 252.72)",
+          "oklch(61% 0.1041 252.72)",
+          "oklch(72% 0.1041 252.72)",
+          "oklch(84% 0.1041 252.72)",
+          "oklch(95% 0.1041 252.72)"
+        ]
+      },
+      "surface-highest": {
+        "role": "neutral",
+        "displayName": "Surface Highest",
+        "tonalRamp": [
+          "oklch(15% 0.1155 255.11)",
+          "oklch(26% 0.1155 255.11)",
+          "oklch(38% 0.1155 255.11)",
+          "oklch(49% 0.1155 255.11)",
+          "oklch(61% 0.1155 255.11)",
+          "oklch(72% 0.1155 255.11)",
+          "oklch(84% 0.1155 255.11)",
+          "oklch(95% 0.1155 255.11)"
+        ]
+      },
+      "surface-low": {
+        "role": "neutral",
+        "displayName": "Surface Low",
+        "tonalRamp": [
+          "oklch(15% 0.0924 251.93)",
+          "oklch(26% 0.0924 251.93)",
+          "oklch(38% 0.0924 251.93)",
+          "oklch(49% 0.0924 251.93)",
+          "oklch(61% 0.0924 251.93)",
+          "oklch(72% 0.0924 251.93)",
+          "oklch(84% 0.0924 251.93)",
+          "oklch(95% 0.0924 251.93)"
+        ]
+      },
+      "error": {
+        "role": "neutral",
+        "displayName": "Error",
+        "tonalRamp": [
+          "oklch(15% 0.0484 18.08)",
+          "oklch(26% 0.0484 18.08)",
+          "oklch(38% 0.0484 18.08)",
+          "oklch(49% 0.0484 18.08)",
+          "oklch(61% 0.0484 18.08)",
+          "oklch(72% 0.0484 18.08)",
+          "oklch(84% 0.0484 18.08)",
+          "oklch(95% 0.0484 18.08)"
+        ]
+      },
+      "on-error": {
+        "role": "neutral",
+        "displayName": "On Error",
+        "tonalRamp": [
+          "oklch(15% 0.1336 27.32)",
+          "oklch(26% 0.1336 27.32)",
+          "oklch(38% 0.1336 27.32)",
+          "oklch(49% 0.1336 27.32)",
+          "oklch(61% 0.1336 27.32)",
+          "oklch(72% 0.1336 27.32)",
+          "oklch(84% 0.1336 27.32)",
+          "oklch(95% 0.1336 27.32)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display-large": {
+        "displayName": "Display Large",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "display-medium": {
+        "displayName": "Display Medium",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "headline-large": {
+        "displayName": "Headline Large",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "headline-medium": {
+        "displayName": "Headline Medium",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "title-large": {
+        "displayName": "Title Large",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "title-medium": {
+        "displayName": "Title Medium",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "body-large": {
+        "displayName": "Body Large",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "body-medium": {
+        "displayName": "Body Medium",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      },
+      "label-large": {
+        "displayName": "Label Large",
+        "purpose": "Native Material typography role; sp scales with user font settings."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "calorie-progress",
+        "value": "Compose animateFloatAsState default animationSpec",
+        "purpose": "Animate actual calorie progress; no custom timing token."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "navigation-rail",
+        "value": "600dp"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary action",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Illustrative browser preview of the native Compose component; dp/sp shown at nominal 1:1 scale. Native Material behavior remains authoritative.",
+      "html": "<button class=\"ds-primary\">Add food</button>",
+      "css": ".ds-primary{font-family:Roboto,Arial,sans-serif;font-size:14px;background:#FECC07;color:#102A45;border:0;border-radius:28px;min-height:52px;padding:12px 24px;font-weight:600}.ds-primary:hover{filter:brightness(.96)}.ds-primary:focus-visible{outline:3px solid #65D7FF;outline-offset:3px}.ds-primary:active{filter:brightness(.9)}"
+    },
+    {
+      "name": "Selected filter",
+      "kind": "chip",
+      "refersTo": "chip-selected",
+      "description": "Illustrative browser preview of the native Compose component; dp/sp shown at nominal 1:1 scale. Native Material behavior remains authoritative.",
+      "html": "<button class=\"ds-chip\" aria-pressed=\"true\">\u2713 Lunch</button>",
+      "css": ".ds-chip{font-family:Roboto,Arial,sans-serif;font-size:14px;background:#FECC07;color:#102A45;border:0;border-radius:8px;padding:8px 16px;font-weight:600}.ds-chip:hover{filter:brightness(.96)}.ds-chip:focus-visible{outline:3px solid #65D7FF;outline-offset:3px}.ds-chip:active{filter:brightness(.9)}"
+    },
+    {
+      "name": "Macro card",
+      "kind": "card",
+      "refersTo": "macro-card",
+      "description": "Illustrative browser preview of the native Compose component; dp/sp shown at nominal 1:1 scale. Native Material behavior remains authoritative.",
+      "html": "<article class=\"ds-macro\"><strong>Protein</strong><b>112</b><span>/ 160 g</span><progress value=\"112\" max=\"160\" aria-label=\"Protein goal progress\"></progress></article>",
+      "css": ".ds-macro{font-family:Roboto,Arial,sans-serif;font-size:14px;background:#255799;color:#F5F8FF;border-radius:20px;padding:12px;width:112px;display:grid;gap:8px}.ds-macro strong{color:#65D7FF}.ds-macro b{font-size:22px}.ds-macro span{color:#D4E5FF}.ds-macro progress{height:6px;width:100%;accent-color:#65D7FF}"
+    },
+    {
+      "name": "Search field",
+      "kind": "input",
+      "refersTo": "search",
+      "description": "Illustrative browser preview of the native Compose component; dp/sp shown at nominal 1:1 scale. Native Material behavior remains authoritative.",
+      "html": "<input class=\"ds-search\" aria-label=\"Search this menu\" placeholder=\"Search this menu\">",
+      "css": ".ds-search{font-family:Roboto,Arial,sans-serif;font-size:14px;background:#103B67;color:#F5F8FF;border:1px solid #8AAFD7;border-radius:16px;padding:16px}.ds-search::placeholder{color:#D4E5FF}.ds-search:hover{border-color:#F5F8FF}.ds-search:focus-visible{outline:2px solid #FECC07;outline-offset:0}"
+    },
+    {
+      "name": "Meal card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Illustrative browser preview of the native Compose component; dp/sp shown at nominal 1:1 scale. Native Material behavior remains authoritative.",
+      "html": "<article class=\"ds-card\"><strong>Lunch</strong><hr><p>Grilled chicken <span>165 kcal</span></p><small>1 serving \u00b7 31 g protein</small></article>",
+      "css": ".ds-card{font-family:Roboto,Arial,sans-serif;font-size:14px;background:#255799;color:#F5F8FF;border-radius:20px;padding:16px;min-width:240px}.ds-card hr{border:0;border-top:1px solid #3B6DA5}.ds-card span{float:right}.ds-card small{color:#D4E5FF}"
+    },
+    {
+      "name": "Bottom navigation",
+      "kind": "nav",
+      "refersTo": "navigation",
+      "description": "Illustrative browser preview of the native Compose component; dp/sp shown at nominal 1:1 scale. Native Material behavior remains authoritative.",
+      "html": "<nav class=\"ds-nav\" aria-label=\"Main\"><button aria-current=\"page\">Today</button><button>Menu</button><button>History</button><button>Settings</button></nav>",
+      "css": ".ds-nav{background:#255799;border-radius:28px;padding:12px;display:flex;gap:8px}.ds-nav button{font-family:Roboto,Arial,sans-serif;font-size:14px;background:transparent;color:#D4E5FF;border:0;min-height:48px;padding:8px}.ds-nav button[aria-current]{color:#FECC07}.ds-nav button:hover{background:#1D4D81}.ds-nav button:focus-visible{outline:2px solid #FECC07}.ds-nav button:active{background:#184573}"
+    },
+    {
+      "name": "Calorie progress",
+      "kind": "custom",
+      "refersTo": "calorie-ring",
+      "description": "Illustrative browser preview of the native Compose component; dp/sp shown at nominal 1:1 scale. Native Material behavior remains authoritative.",
+      "html": "<div class=\"ds-ring\" role=\"img\" aria-label=\"1420 of 2400 calories\"><div><b>1,420</b><span>of 2,400 kcal</span><small>980 remaining</small></div></div>",
+      "css": ".ds-ring{font-family:Roboto,Arial,sans-serif;font-size:14px;width:204px;height:204px;border:13px solid #255799;border-top-color:#FECC07;border-right-color:#FECC07;border-radius:50%;background:#103B67;color:#F5F8FF;display:grid;place-items:center}.ds-ring div{display:grid;text-align:center;gap:8px}.ds-ring b{font-size:44px}.ds-ring span{color:#D4E5FF}.ds-ring small{color:#65D7FF}"
+    }
+  ],
+  "narrative": {
+    "northStar": "UCI blue and gold",
+    "overview": "A bright, confident UCI blue-and-gold identity gives daily nutrition a clear, approachable rhythm. Blue surfaces organize information; gold marks progress, selection, and the main action. Large numbers carry the hierarchy while labels, units, and plain-language status keep the data understandable.\n\nThis is a native Android Compose and Material 3 system. The user-approved visual authority is `docs/design/approved-mockup.png`; the token values above are extracted from the implemented theme and components. Platform typography, interaction states, insets, and accessibility semantics take precedence over reproducing the illustrative mockup pixel for pixel.",
+    "keyCharacteristics": [
+      "UCI blue backgrounds with brighter blue cards and sheets.",
+      "Gold primary actions and selected controls.",
+      "Bold numerical hierarchy with compact, readable supporting text.",
+      "Native controls, tonal grouping, and explicit nutrition status."
+    ],
+    "rules": [
+      {
+        "name": "The Labeled Color Rule",
+        "body": "Every nutrient color is accompanied by a readable nutrient label or unit.",
+        "section": "colors"
+      }
+    ],
+    "dos": [
+      "Do use dp for layout and sp for text, preserving Android font scaling.",
+      "Do pair macro colors with labels and units.",
+      "Do show missing values and partial totals explicitly.",
+      "Do reuse the blue surfaces and gold selection roles from the theme.",
+      "Do keep touch targets at least 48dp and honor system and keyboard insets."
+    ],
+    "donts": [
+      "Don\u2019t restore the superseded lime palette.",
+      "Don\u2019t turn over-goal progress into an error state.",
+      "Don\u2019t add gradients, stock photography, or decorative animation.",
+      "Don\u2019t substitute fabricated data for empty or unavailable states.",
+      "Don\u2019t introduce web hover conventions as native Android requirements."
+    ]
+  }
+}
