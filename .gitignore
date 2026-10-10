@@ -9,3 +9,9 @@ local.properties
 .tools/
 
 artifacts/*.apk
+
+# Native iOS local builds and developer state
+ios/**/.build/
+ios/**/DerivedData/
+ios/**/*.xcuserstate
+ios/**/xcuserdata/
