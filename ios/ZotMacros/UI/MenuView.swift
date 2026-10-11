@@ -13,7 +13,6 @@ struct MenuView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                Text("Today · \(model.day)").foregroundStyle(ZotTheme.muted)
                 Picker("Dining hall", selection: Binding(get: { model.preferences.value.hall }, set: { model.selectHall($0) })) {
                     Text("Anteatery").tag("anteatery"); Text("Brandywine").tag("brandywine")
                 }.pickerStyle(.segmented).frame(minHeight: 48)
@@ -66,7 +65,8 @@ struct MenuView: View {
                 }
                 Attribution()
             }.padding(20).frame(maxWidth: 720)
-        }.navigationTitle("Dining menu").zotScreen().refreshable { await model.refreshMenu(force: true) }
+        }.zotScreen().toolbar(.hidden, for: .navigationBar)
+            .safeAreaInset(edge: .top, spacing: 0) { ScreenHeader(title: "Dining menu") { HeaderDate(day: model.day) } }.refreshable { await model.refreshMenu(force: true) }
             .task(id: model.preferences.value.hall + model.day) { if model.preferences.value.autoRefresh { await model.refreshMenu() } }
             .onChange(of: snapshot, initial: true) { _, value in
                 let c = CampusClock.calendar.dateComponents([.hour, .minute], from: Date())

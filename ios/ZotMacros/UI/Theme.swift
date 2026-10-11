@@ -19,3 +19,37 @@ extension View {
     func zotScreen() -> some View { navigationBarTitleDisplayMode(.inline).background(ZotTheme.background).toolbarBackground(ZotTheme.background, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar) }
 }
 func amount(_ value: Double?) -> String { value.map { $0.formatted(.number.precision(.fractionLength(0...1))) } ?? "Unavailable" }
+
+struct ScreenHeader<Trailing: View>: View {
+    let title: String
+    @ViewBuilder var trailing: () -> Trailing
+    private var heading: some View {
+        Text(title).font(.system(.title2, design: .rounded, weight: .bold))
+            .foregroundStyle(.white).accessibilityAddTraits(.isHeader)
+            .accessibilityIdentifier("screenTitle")
+    }
+    var body: some View {
+        ViewThatFits(in: .horizontal) {
+            HStack(alignment: .center, spacing: 16) {
+                heading.fixedSize(); Spacer(minLength: 8); trailing().fixedSize()
+            }
+            VStack(alignment: .leading, spacing: 8) { heading; trailing() }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.horizontal, 20).padding(.vertical, 16)
+        .background(ZotTheme.background)
+    }
+}
+struct HeaderDate: View {
+    let day: String
+    var body: some View {
+        Text(CampusClock.date(day).map { date in
+            let formatter = DateFormatter()
+            formatter.timeZone = CampusClock.calendar.timeZone
+            formatter.setLocalizedDateFormatFromTemplate("MMM d")
+            return formatter.string(from: date)
+        } ?? day)
+        .font(.subheadline.weight(.medium)).foregroundStyle(ZotTheme.muted)
+        .accessibilityLabel(day)
+    }
+}

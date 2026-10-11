@@ -38,7 +38,8 @@ struct SettingsView: View {
                 Text("An independent app for UCI students. Not affiliated with or endorsed by UC Irvine.").font(.footnote).foregroundStyle(ZotTheme.muted)
                 Attribution()
             }
-        }.scrollContentBackground(.hidden).zotScreen().navigationTitle("Settings")
+        }.scrollContentBackground(.hidden).zotScreen().toolbar(.hidden, for: .navigationBar)
+            .safeAreaInset(edge: .top, spacing: 0) { ScreenHeader(title: "Settings") { EmptyView() } }
             .onAppear { draft = model.preferences.value }
             .alert("Clear food history?", isPresented: $clear) { Button("Cancel", role: .cancel) {}; Button("Clear history", role: .destructive) { model.clearDiary() } } message: { Text("This permanently removes all food entries stored on this device.") }
     }

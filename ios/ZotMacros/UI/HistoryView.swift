@@ -8,7 +8,6 @@ struct HistoryView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
-                DatePicker("Diary date", selection: $date, in: ...Date(), displayedComponents: .date).datePickerStyle(.compact).environment(\.timeZone, CampusClock.calendar.timeZone).frame(minHeight: 48)
                 NutritionSummary(entries: model.entries(on: day), preferences: model.preferences.value)
                 DiaryList(entries: model.entries(on: day), edit: model.edit, delete: model.delete)
                 Text("Last seven days").font(.title2.bold())
@@ -26,7 +25,8 @@ struct HistoryView: View {
                     }.zotSurface()
                 }
             }.padding(20).frame(maxWidth: 720)
-        }.navigationTitle("History").zotScreen()
+        }.zotScreen().toolbar(.hidden, for: .navigationBar)
+            .safeAreaInset(edge: .top, spacing: 0) { ScreenHeader(title: "History") { DatePicker("Diary date", selection: $date, in: ...Date(), displayedComponents: .date).datePickerStyle(.compact).environment(\.timeZone, CampusClock.calendar.timeZone).labelsHidden().accessibilityLabel("Diary date").frame(minHeight: 48) } }
     }
     private var days: [String] { (-6...0).map { CampusClock.day(at: CampusClock.calendar.date(byAdding: .day, value: $0, to: date)!) } }
 }

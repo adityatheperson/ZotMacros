@@ -17,7 +17,7 @@ final class LoggingFlowTests: XCTestCase {
     }
     func testNavigation() {
         let app = launch()
-        for tab in ["Menu", "History", "Settings", "Today"] { app.tabBars.buttons[tab].tap(); XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 3)); capture("normal-" + tab) }
+        for tab in ["Menu", "History", "Settings", "Today"] { app.tabBars.buttons[tab].tap(); XCTAssertTrue(app.staticTexts["screenTitle"].waitForExistence(timeout: 3)); capture("normal-" + tab) }
         XCTAssertTrue(app.buttons["Add food"].exists)
     }
     func testReducedMotionNavigation() throws {
@@ -25,7 +25,7 @@ final class LoggingFlowTests: XCTestCase {
         let app = launch(["reset"])
         for tab in ["Menu", "History", "Today"] {
             app.tabBars.buttons[tab].tap()
-            XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 3))
+            XCTAssertTrue(app.staticTexts["screenTitle"].waitForExistence(timeout: 3))
         }
         capture("reduce-motion-today")
     }
@@ -51,7 +51,7 @@ final class LoggingFlowTests: XCTestCase {
         XCTAssertTrue(save.isHittable); capture("large-text-keyboard-food-sheet"); save.tap()
         XCTAssertTrue(app.staticTexts["saveError"].waitForExistence(timeout: 3))
         XCTAssertTrue(save.isHittable); save.tap()
-        XCTAssertTrue(app.navigationBars["Dining menu"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.staticTexts["screenTitle"].waitForExistence(timeout: 3))
     }
     func testManualRefreshDoesNotFetchOnAppearance() {
         let app = launch(["reset", "manual-menu"]); menu(app)
