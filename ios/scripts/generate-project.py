@@ -26,11 +26,11 @@ for name, folder, product_type in [('ZotMacros','ZotMacros','application'),('Zot
     if name == 'ZotMacrosUITestHost': paths += [p for p in (root/'ZotMacros').rglob('*.swift') if p.name != 'ZotMacrosApp.swift']
     for path in sorted(paths):
         relative = str(path.relative_to(root))
-        f = add('file:'+relative, 'PBXFileReference', lastKnownFileType='sourcecode.swift', path=relative, sourceTree='<group>')
+        f = add(name+':file:'+relative, 'PBXFileReference', lastKnownFileType='sourcecode.swift', path=relative, sourceTree='<group>')
         source_refs.append(ref(f)); source_builds.append(ref(add(name+':build:'+relative, 'PBXBuildFile', fileRef=ref(f))))
     if is_app:
         for path, kind in [('ZotMacros/Assets.xcassets', 'folder.assetcatalog'),('ZotMacros/PrivacyInfo.xcprivacy','text.xml')]:
-            f = add('file:'+path, 'PBXFileReference', lastKnownFileType=kind, path=path, sourceTree='<group>'); source_refs.append(ref(f)); resource_builds.append(ref(add(name+':build:'+path, 'PBXBuildFile', fileRef=ref(f))))
+            f = add(name+':file:'+path, 'PBXFileReference', lastKnownFileType=kind, path=path, sourceTree='<group>'); source_refs.append(ref(f)); resource_builds.append(ref(add(name+':build:'+path, 'PBXBuildFile', fileRef=ref(f))))
     group = add('group:'+name, 'PBXGroup', children=source_refs, name=name, sourceTree='<group>'); main_children.append(ref(group))
     product = add('product:'+name, 'PBXFileReference', explicitFileType='wrapper.application' if is_app else 'wrapper.cfbundle', path=name+('.app' if is_app else '.xctest'), sourceTree='BUILT_PRODUCTS_DIR'); products.append(ref(product))
     dependencies, framework_builds, package_products = [], [], []
@@ -55,7 +55,7 @@ product_group=add('products','PBXGroup',children=products,name='Products',source
 main=add('main','PBXGroup',children=main_children,sourceTree='<group>')
 configs=[]
 for mode in ['Debug','Release']:
-    settings=dict(CLANG_ENABLE_MODULES='YES',CLANG_ENABLE_OBJC_ARC='YES',SWIFT_OPTIMIZATION_LEVEL='-Onone' if mode=='Debug' else '-O',DEBUG_INFORMATION_FORMAT='dwarf' if mode=='Debug' else 'dwarf-with-dsym',ENABLE_TESTABILITY='YES' if mode=='Debug' else 'NO',SWIFT_ACTIVE_COMPILATION_CONDITIONS='DEBUG' if mode=='Debug' else '',SWIFT_STRICT_CONCURRENCY='targeted')
+    settings=dict(ONLY_ACTIVE_ARCH='YES' if mode=='Debug' else 'NO',CLANG_ENABLE_MODULES='YES',CLANG_ENABLE_OBJC_ARC='YES',SWIFT_OPTIMIZATION_LEVEL='-Onone' if mode=='Debug' else '-O',DEBUG_INFORMATION_FORMAT='dwarf' if mode=='Debug' else 'dwarf-with-dsym',ENABLE_TESTABILITY='YES' if mode=='Debug' else 'NO',SWIFT_ACTIVE_COMPILATION_CONDITIONS='DEBUG' if mode=='Debug' else '',SWIFT_STRICT_CONCURRENCY='targeted')
     configs.append(ref(add('project:'+mode,'XCBuildConfiguration',name=mode,buildSettings=settings)))
 config=add('project:config','XCConfigurationList',buildConfigurations=configs,defaultConfigurationIsVisible='0',defaultConfigurationName='Release')
 project=add('project','PBXProject',attributes=dict(LastUpgradeCheck='1600',BuildIndependentTargetsInParallel='YES'),buildConfigurationList=ref(config),compatibilityVersion='Xcode 14.0',developmentRegion='en',hasScannedForEncodings='0',knownRegions=['en','Base'],mainGroup=ref(main),productRefGroup=ref(product_group),projectDirPath='',projectRoot='',packageReferences=[ref(package)],targets=targets)

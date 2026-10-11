@@ -4,7 +4,7 @@ Native SwiftUI port of the Android app, targeting iOS 17 and later. No additiona
 
 ## Status
 
-The source project is implemented. Portable nutrition, parser, networking and state tests run on this Mac. **An iOS build, SwiftData tests and simulator visual verification have not run:** full Xcode and its iOS runtime are missing. See `../docs/verification/ios-port/RESULTS.md` for current evidence and remaining checks. Do not treat syntax checks as a successful native build.
+The native app builds and launches in the iPhone simulator. All 31 executed package tests and 7 native integration/UI tests passed with Xcode 27.0. See [native verification](../docs/verification/ios-port/XCODE-2026-10-10.md) for screenshots and scope. Physical-device testing, signing, and App Store submission remain outstanding.
 
 ## Open and run
 

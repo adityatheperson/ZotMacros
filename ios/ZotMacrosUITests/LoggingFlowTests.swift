@@ -1,4 +1,5 @@
 import XCTest
+import UIKit
 final class LoggingFlowTests: XCTestCase {
     private func launch(_ arguments: [String] = ["reset"]) -> XCUIApplication {
         let app = XCUIApplication(); app.launchArguments = arguments; app.launch(); return app
@@ -10,10 +11,23 @@ final class LoggingFlowTests: XCTestCase {
     private func scrollTo(_ element: XCUIElement, app: XCUIApplication) {
         for _ in 0..<8 { if element.isHittable { return }; app.swipeUp() }
     }
+    private func capture(_ name: String) {
+        let attachment = XCTAttachment(screenshot: XCUIScreen.main.screenshot())
+        attachment.name = name; attachment.lifetime = .keepAlways; add(attachment)
+    }
     func testNavigation() {
         let app = launch()
-        for tab in ["Menu", "History", "Settings", "Today"] { app.tabBars.buttons[tab].tap(); XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 3)) }
+        for tab in ["Menu", "History", "Settings", "Today"] { app.tabBars.buttons[tab].tap(); XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 3)); capture("normal-" + tab) }
         XCTAssertTrue(app.buttons["Add food"].exists)
+    }
+    func testReducedMotionNavigation() throws {
+        try XCTSkipUnless(UIAccessibility.isReduceMotionEnabled, "Enable Simulator Reduce Motion to exercise this flow.")
+        let app = launch(["reset"])
+        for tab in ["Menu", "History", "Today"] {
+            app.tabBars.buttons[tab].tap()
+            XCTAssertTrue(app.navigationBars.firstMatch.waitForExistence(timeout: 3))
+        }
+        capture("reduce-motion-today")
     }
     func testInitialPreferredMealAndUnknownLoggingPersistsOffline() {
         let app = launch(); menu(app)
@@ -34,7 +48,7 @@ final class LoggingFlowTests: XCTestCase {
         let quantity = app.textFields["servingQuantity"]
         scrollTo(quantity, app: app); quantity.tap(); quantity.typeText(XCUIKeyboardKey.delete.rawValue + "1.5")
         let save = app.buttons["Add to diary"]
-        XCTAssertTrue(save.isHittable); save.tap()
+        XCTAssertTrue(save.isHittable); capture("large-text-keyboard-food-sheet"); save.tap()
         XCTAssertTrue(app.staticTexts["saveError"].waitForExistence(timeout: 3))
         XCTAssertTrue(save.isHittable); save.tap()
         XCTAssertTrue(app.navigationBars["Dining menu"].waitForExistence(timeout: 3))
