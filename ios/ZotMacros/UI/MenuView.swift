@@ -27,7 +27,14 @@ struct MenuView: View {
                     Text("\(model.menu.result?.cached == true ? "Saved" : "Updated") \(snapshot.fetchedAt.formatted(date: .abbreviated, time: .shortened))").font(.caption).foregroundStyle(ZotTheme.muted)
                     if snapshot.unavailableDishes > 0 { Text("Some Anteater food details were unavailable.").font(.caption).foregroundStyle(ZotTheme.muted) }
                     Picker("Meal period", selection: $selectedPeriod) { ForEach(snapshot.periods) { Text($0.name).tag($0.id) } }.frame(minHeight: 48)
-                    TextField("Search this menu", text: $search).textFieldStyle(.roundedBorder).accessibilityLabel("Search this menu").frame(minHeight: 48)
+                    HStack(spacing: 12) {
+                        Image(systemName: "magnifyingglass").foregroundStyle(ZotTheme.muted).accessibilityHidden(true)
+                        TextField("Search this menu", text: $search, prompt: Text("Search this menu").foregroundStyle(ZotTheme.muted))
+                            .textFieldStyle(.plain).foregroundStyle(.white).tint(ZotTheme.gold)
+                            .accessibilityLabel("Search this menu")
+                    }
+                    .padding(.horizontal, 16).frame(minHeight: 52)
+                    .background(ZotTheme.surface, in: RoundedRectangle(cornerRadius: 16))
                     Picker("Station", selection: $selectedStation) {
                         Text("All stations").tag("")
                         ForEach(stations, id: \.0) { id, name in Text(name).tag(id) }

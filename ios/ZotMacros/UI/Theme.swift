@@ -16,6 +16,6 @@ struct GoldButton: ButtonStyle {
 }
 extension View {
     func zotSurface() -> some View { padding(16).background(ZotTheme.surface, in: RoundedRectangle(cornerRadius: 20)) }
-    func zotScreen() -> some View { background(ZotTheme.background).toolbarBackground(ZotTheme.background, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar) }
+    func zotScreen() -> some View { navigationBarTitleDisplayMode(.inline).background(ZotTheme.background).toolbarBackground(ZotTheme.background, for: .navigationBar).toolbarBackground(.visible, for: .navigationBar) }
 }
 func amount(_ value: Double?) -> String { value.map { $0.formatted(.number.precision(.fractionLength(0...1))) } ?? "Unavailable" }
