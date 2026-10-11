@@ -18,13 +18,14 @@ struct MenuParserTests {
         #expect(throws: (any Error).self) { try UciMenuParser.foods(data: Data(contentsOf: url), day: "2026-10-09", stations: [:]) }
         let variant = MenuFood(dish: Dish(id: chicken.aliases.last!, name: "Variant", nutrition: Nutrition([.protein: 99])), stationId: "1926", station: "Fire and Ice")
         let result = reconcile(period: MenuPeriod(id: "lunch", name: "Lunch", foods: [variant]), foods: [chicken, chicken])
-        #expect(result.foods.count == 1); #expect(result.foods[0].dish.nutrition[.protein] == nil)
+        #expect(result.foods.count == 1); #expect(result.foods[0].dish == variant.dish)
     }
     @Test func testPreservesNutritionAndStationIdentity() {
         let dish = Dish(id: "x", name: "Rice", nutrition: Nutrition([.calories: 100]))
         let period = MenuPeriod(id: "l", name: "Lunch", foods: [MenuFood(dish: dish, stationId: "1", station: "One"), MenuFood(dish: Dish(id: "old", name: "Stale"), stationId: "1", station: "One")])
         let result = reconcile(period: period, foods: [SupplementFood(id: "x", name: "Rice", stationId: "1", station: "One", aliases: ["x"]), SupplementFood(id: "x", name: "Rice", stationId: "2", station: "Two", aliases: ["x"])])
-        #expect(result.foods.count == 2); #expect(result.foods[0].dish == dish); #expect(result.foods[1].dish.nutrition[.calories] == nil)
+        #expect(result.foods.count == 3); #expect(result.foods[0].dish == dish)
+        #expect(result.foods[1].dish.id == "old"); #expect(result.foods.last?.dish.nutrition[.calories] == nil)
     }
     @Test func testScheduleOverrides() throws {
         let schedules: [[String: Any]] = [["type": "standard", "meal_periods": [["meal_period": "Lunch", "opening_hours": "Mo-Su 11:00-14:00; Sa off"]]], ["start_date": "2026-10-10", "end_date": "2026-10-10", "meal_periods": [["meal_period": "Brunch", "opening_hours": "Sa 10:00-14:00"]]]]

@@ -40,10 +40,24 @@ public enum UciMenuParser {
         return result
     }
 }
+// Anteater owns known dishes; UCI contributes only missing station placements.
 public func reconcile(period: MenuPeriod, foods: [SupplementFood]) -> MenuPeriod {
+    func identity(_ id: String, station: String) -> String {
+        let suffix = ":station:" + station
+        return id.hasSuffix(suffix) ? String(id.dropLast(suffix.count)) : id
+    }
     var copy = period, seen = Set<String>()
-    copy.foods = foods.filter { seen.insert($0.stationId + ":" + $0.id).inserted }.map { food in
-        period.foods.first { $0.stationId == food.stationId && ($0.dish.id == food.id || $0.dish.id == "\(food.id):station:\(food.stationId)") } ?? MenuFood(dish: Dish(id: food.id, name: food.name), stationId: food.stationId, station: food.station)
+    copy.foods = period.foods.filter {
+        seen.insert($0.stationId + ":" + identity($0.dish.id, station: $0.stationId)).inserted
+    }
+    for food in foods {
+        let ids = Set([food.id] + food.aliases)
+        let apiMatch = period.foods.contains {
+            $0.stationId == food.stationId && ids.contains(identity($0.dish.id, station: $0.stationId))
+        }
+        if !apiMatch, seen.insert(food.stationId + ":" + food.id).inserted {
+            copy.foods.append(MenuFood(dish: Dish(id: food.id, name: food.name), stationId: food.stationId, station: food.station))
+        }
     }
     return copy
 }
