@@ -1,0 +1,127 @@
+{
+  "ok": true,
+  "data": [
+    {
+      "id": "brandywine",
+      "updatedAt": "2026-10-09T04:00:43.821Z",
+      "stations": [
+        {
+          "id": "1872",
+          "name": "Honeycakes",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1875",
+          "name": "The Farm Stand- Salad",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1878",
+          "name": "Ember",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1881",
+          "name": "Grubb",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1884",
+          "name": "Hearth",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1887",
+          "name": "Compass",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1890",
+          "name": "Crossroads",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1893",
+          "name": "The Twisted Root",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1896",
+          "name": "Soups ",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "1899",
+          "name": "Saute ",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "2166",
+          "name": "The Farm Stand- Deli ",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        },
+        {
+          "id": "275501",
+          "name": "Promotions",
+          "updatedAt": "2026-10-09T04:00:43.821Z"
+        }
+      ]
+    },
+    {
+      "id": "anteatery",
+      "updatedAt": "2026-10-09T04:00:34.134Z",
+      "stations": [
+        {
+          "id": "1926",
+          "name": "Fire and Ice",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1929",
+          "name": "The Twisted Root",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1932",
+          "name": "Home",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1935",
+          "name": "Sizzle Grill",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1938",
+          "name": "Bakery",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1941",
+          "name": "Oven",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1944",
+          "name": "Soups",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1947",
+          "name": "Farmer's Market",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1950",
+          "name": "Deli",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        },
+        {
+          "id": "1953",
+          "name": "Noodle Bar",
+          "updatedAt": "2026-10-09T04:00:34.134Z"
+        }
+      ]
+    }
+  ]
+}
