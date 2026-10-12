@@ -20,6 +20,42 @@ final class LoggingFlowTests: XCTestCase {
         for tab in ["Menu", "History", "Settings", "Today"] { app.tabBars.buttons[tab].tap(); XCTAssertTrue(app.staticTexts["screenTitle"].waitForExistence(timeout: 3)); capture("normal-" + tab) }
         XCTAssertTrue(app.buttons["Add food"].exists)
     }
+    func testPreferredHallPersistsWithoutSaveButton() {
+        let app = launch()
+        app.tabBars.buttons["Settings"].tap()
+        let hall = app.buttons["preferredHall"]
+        scrollTo(hall, app: app); hall.tap()
+        app.buttons["Brandywine"].tap()
+        app.tabBars.buttons["Menu"].tap()
+        XCTAssertTrue(app.buttons["hall-brandywine"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["hall-brandywine"].isSelected)
+        app.tabBars.buttons["Settings"].tap()
+        scrollTo(hall, app: app)
+        XCTAssertTrue(hall.label.contains("Brandywine") || (hall.value as? String) == "Brandywine")
+        app.terminate(); app.launchArguments = []; app.launch()
+        app.tabBars.buttons["Menu"].tap()
+        XCTAssertTrue(app.buttons["hall-brandywine"].waitForExistence(timeout: 3))
+        XCTAssertTrue(app.buttons["hall-brandywine"].isSelected)
+    }
+    func testMealPeriodTabs() {
+        let app = launch(); menu(app)
+        let lunch = app.buttons["period-lunch"], breakfast = app.buttons["period-breakfast"]
+        XCTAssertTrue(lunch.waitForExistence(timeout: 3)); XCTAssertTrue(lunch.isSelected)
+        breakfast.tap(); XCTAssertTrue(breakfast.isSelected)
+        XCTAssertTrue(app.staticTexts["No foods found"].waitForExistence(timeout: 3))
+        lunch.tap(); XCTAssertTrue(lunch.isSelected)
+        XCTAssertTrue(app.staticTexts["Known lunch food"].waitForExistence(timeout: 3))
+        capture("meal-tabs-lunch")
+    }
+    func testDiningHallSelection() {
+        let app = launch(); menu(app)
+        let anteatery = app.buttons["hall-anteatery"], brandywine = app.buttons["hall-brandywine"]
+        XCTAssertTrue(anteatery.isSelected)
+        brandywine.tap(); XCTAssertTrue(brandywine.isSelected); XCTAssertFalse(anteatery.isSelected)
+        capture("hall-brandywine")
+        anteatery.tap(); XCTAssertTrue(anteatery.isSelected)
+        capture("hall-anteatery")
+    }
     func testReducedMotionNavigation() throws {
         try XCTSkipUnless(UIAccessibility.isReduceMotionEnabled, "Enable Simulator Reduce Motion to exercise this flow.")
         let app = launch(["reset"])

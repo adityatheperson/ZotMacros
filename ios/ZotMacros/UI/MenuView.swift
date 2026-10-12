@@ -13,9 +13,7 @@ struct MenuView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 18) {
-                Picker("Dining hall", selection: Binding(get: { model.preferences.value.hall }, set: { model.selectHall($0) })) {
-                    Text("Anteatery").tag("anteatery"); Text("Brandywine").tag("brandywine")
-                }.pickerStyle(.segmented).frame(minHeight: 48)
+                DiningHallSelector(selection: Binding(get: { model.preferences.value.hall }, set: { model.selectHall($0) }))
                 if model.menu.loading { ProgressView("Refreshing menu…").frame(maxWidth: .infinity) }
                 if let warning = model.menu.result?.warning {
                     VStack(alignment: .leading, spacing: 8) { Label(warning, systemImage: "exclamationmark.circle"); Button("Retry") { Task { await model.refreshMenu(force: true) } }.frame(minHeight: 48) }.font(.subheadline).zotSurface()
@@ -25,7 +23,7 @@ struct MenuView: View {
                     if !snapshot.supplementVerified { Text("Menu may be incomplete.").foregroundStyle(ZotTheme.gold) }
                     Text("\(model.menu.result?.cached == true ? "Saved" : "Updated") \(snapshot.fetchedAt.formatted(date: .abbreviated, time: .shortened))").font(.caption).foregroundStyle(ZotTheme.muted)
                     if snapshot.unavailableDishes > 0 { Text("Some Anteater food details were unavailable.").font(.caption).foregroundStyle(ZotTheme.muted) }
-                    Picker("Meal period", selection: $selectedPeriod) { ForEach(snapshot.periods) { Text($0.name).tag($0.id) } }.frame(minHeight: 48)
+                    MealPeriodTabs(periods: snapshot.periods, selection: $selectedPeriod)
                     HStack(spacing: 12) {
                         Image(systemName: "magnifyingglass").foregroundStyle(ZotTheme.muted).accessibilityHidden(true)
                         TextField("Search this menu", text: $search, prompt: Text("Search this menu").foregroundStyle(ZotTheme.muted))
@@ -78,4 +76,65 @@ struct MenuView: View {
         var names: [String: String] = [:]; for food in period?.foods ?? [] { names[food.stationId] = food.station }; return names.sorted { $0.value < $1.value }
     }
     private func alreadyLogged(_ food: MenuFood) -> Bool { model.entries(on: model.day).contains { $0.dish.id == food.dish.id && $0.hall == model.preferences.value.hall && $0.station == food.station } }
+}
+
+private struct DiningHallSelector: View {
+    @Binding var selection: String
+    @Environment(\.dynamicTypeSize) private var typeSize
+    var body: some View {
+        let layout = typeSize.isAccessibilitySize ? AnyLayout(VStackLayout(spacing: 4)) : AnyLayout(HStackLayout(spacing: 4))
+        layout {
+            hall("Anteatery", id: "anteatery")
+            hall("Brandywine", id: "brandywine")
+        }
+        .padding(4)
+        .background(ZotTheme.surface, in: RoundedRectangle(cornerRadius: 20))
+        .accessibilityElement(children: .contain).accessibilityLabel("Dining hall")
+    }
+    private func hall(_ name: String, id: String) -> some View {
+        let selected = selection == id
+        return Button { if !selected { selection = id } } label: {
+            Text(name).font(.system(.subheadline, design: .rounded, weight: .semibold))
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity, minHeight: 48).padding(.horizontal, 8)
+                .foregroundStyle(selected ? ZotTheme.ink : ZotTheme.muted)
+                .background(selected ? ZotTheme.gold : .clear, in: RoundedRectangle(cornerRadius: 16))
+                .contentShape(RoundedRectangle(cornerRadius: 16))
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(selected ? .isSelected : [])
+        .accessibilityIdentifier("hall-" + id)
+    }
+}
+
+private struct MealPeriodTabs: View {
+    let periods: [MenuPeriod]
+    @Binding var selection: String
+    var body: some View {
+        ScrollViewReader { proxy in
+            ScrollView(.horizontal) {
+                HStack(spacing: 24) {
+                    ForEach(periods) { period in
+                        let selected = selection == period.id
+                        Button { selection = period.id } label: {
+                            Text(period.name)
+                                .font(.system(.headline, design: .rounded))
+                                .foregroundStyle(selected ? ZotTheme.gold : ZotTheme.muted)
+                                .padding(.horizontal, 4).frame(minHeight: 48)
+                                .overlay(alignment: .bottom) {
+                                    Capsule().fill(selected ? ZotTheme.gold : .clear).frame(height: 3)
+                                }
+                                .contentShape(Rectangle())
+                        }
+                        .buttonStyle(.plain).id(period.id)
+                        .accessibilityAddTraits(selected ? .isSelected : [])
+                        .accessibilityIdentifier("period-" + period.id)
+                    }
+                }.padding(.bottom, 4)
+            }
+            .scrollIndicators(.hidden)
+            .onChange(of: selection, initial: true) { _, value in proxy.scrollTo(value, anchor: .center) }
+        }
+        .accessibilityElement(children: .contain).accessibilityLabel("Meal period")
+    }
 }

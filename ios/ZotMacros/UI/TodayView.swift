@@ -11,6 +11,6 @@ struct TodayView: View {
                 Button { model.selectedTab = 1 } label: { Label("Add food", systemImage: "plus") }.buttonStyle(GoldButton())
             }.padding(20).frame(maxWidth: 720)
         }.zotScreen().toolbar(.hidden, for: .navigationBar)
-            .safeAreaInset(edge: .top, spacing: 0) { ScreenHeader(title: "Let’s fuel up.") { HeaderDate(day: model.day) } }
+            .safeAreaInset(edge: .top, spacing: 0) { ScreenHeader(title: "ZotMacros", logo: "BrandLogo") { HeaderDate(day: model.day) } }
     }
 }

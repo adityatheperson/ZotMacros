@@ -22,11 +22,18 @@ func amount(_ value: Double?) -> String { value.map { $0.formatted(.number.preci
 
 struct ScreenHeader<Trailing: View>: View {
     let title: String
+    var logo: String? = nil
     @ViewBuilder var trailing: () -> Trailing
     private var heading: some View {
-        Text(title).font(.system(.title2, design: .rounded, weight: .bold))
-            .foregroundStyle(.white).accessibilityAddTraits(.isHeader)
-            .accessibilityIdentifier("screenTitle")
+        HStack(spacing: 10) {
+            if let logo {
+                Image(logo).resizable().scaledToFit().frame(width: 36, height: 36)
+                    .clipShape(RoundedRectangle(cornerRadius: 9)).accessibilityHidden(true)
+            }
+            Text(title).font(.system(.title2, design: .rounded, weight: .bold))
+                .foregroundStyle(.white).accessibilityAddTraits(.isHeader)
+                .accessibilityIdentifier("screenTitle")
+        }
     }
     var body: some View {
         ViewThatFits(in: .horizontal) {
