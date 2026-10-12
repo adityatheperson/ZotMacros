@@ -153,7 +153,7 @@ Food details use a scrollable modal sheet with 20dp horizontal padding and a sav
 
 Custom cards are flat at rest: blue tonal separation and subtle dividers establish grouping, with no custom shadow vocabulary. Material sheets, dialogs, and controls retain their native elevation and scrim behavior. Do not replace those platform effects with a web shadow system.
 
-Tab destinations crossfade with 180ms arrivals and 120ms exits. Calorie-ring and macro-bar progress share a 280ms FastOutSlowIn tween; numeric totals remain immediate and truthful. Food sheets retain their content until the native Material hide transition finishes, including after a save. All finite animations inherit Android’s animator duration scale, including Remove animations. History scrolling and control feedback retain Material behavior. Motion tokens live in `ui/Motion.kt`.
+Tab destinations use a shared horizontal transition: 300ms movement over one eighth of the content width, 240ms fade-in and 180ms fade-out. Direction follows tab order, reversing when navigating toward an earlier tab; the navigation bar stays fixed. Calorie-ring and macro-bar progress share a 280ms FastOutSlowIn tween; numeric totals remain immediate and truthful. Food sheets retain their content until the native Material hide transition finishes, including after a save. All finite animations inherit Android’s animator duration scale, including Remove animations. History scrolling and control feedback retain Material behavior. Motion tokens live in `ui/Motion.kt`.
 
 ## Shapes
 

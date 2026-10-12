@@ -1,8 +1,5 @@
 package com.zotmacros.ui
 
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -62,10 +59,10 @@ import androidx.navigation.compose.*
                     }) { padding ->
                         Box(Modifier.padding(padding).fillMaxSize(), contentAlignment = Alignment.TopCenter) {
                             NavHost(nav, "Today", Modifier.widthIn(max = 720.dp).fillMaxSize(),
-                                enterTransition = { fadeIn(tween(ZotMotion.EnterMillis)) },
-                                exitTransition = { fadeOut(tween(ZotMotion.ExitMillis)) },
-                                popEnterTransition = { fadeIn(tween(ZotMotion.EnterMillis)) },
-                                popExitTransition = { fadeOut(tween(ZotMotion.ExitMillis)) }) {
+                                enterTransition = { ZotMotion.tabEnter(initialState.destination.route, targetState.destination.route) },
+                                exitTransition = { ZotMotion.tabExit(initialState.destination.route, targetState.destination.route) },
+                                popEnterTransition = { ZotMotion.tabEnter(initialState.destination.route, targetState.destination.route) },
+                                popExitTransition = { ZotMotion.tabExit(initialState.destination.route, targetState.destination.route) }) {
                                 composable("Today") { TodayScreen(today, entries, prefs!!, { navigate("Menu") }, vm::edit) }
                                 composable("Menu") { MenuScreen(menu, today, now, prefs!!, entries.filter { it.date == today.toString() }.map { it.dishId }.toSet(), vm::selectHall, { vm.refresh(true) }, vm::openFood) }
                                 composable("History") { HistoryScreen(today, entries, prefs!!, vm::edit) }
