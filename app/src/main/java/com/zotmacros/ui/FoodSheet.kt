@@ -80,7 +80,7 @@ import com.zotmacros.domain.*
                     Text("Ingredients & allergens", style = MaterialTheme.typography.titleMedium)
                     Muted(selection.dish.ingredients?.takeIf { it.isNotBlank() } ?: "Ingredients unavailable")
                     Muted(if (selection.dish.allergens.isNotEmpty()) "Contains: ${selection.dish.allergens.joinToString()}" else "No allergen information reported. Check with dining staff.")
-                    Attribution(); UciAttribution()
+                    Attribution()
                 } else {
                     Muted("Using the original nutrition saved with this entry.")
                     TextButton(onClick = { confirmDelete = true }, enabled = !saving && !closing) { Icon(Icons.Outlined.DeleteOutline, null); Text("Delete entry") }
