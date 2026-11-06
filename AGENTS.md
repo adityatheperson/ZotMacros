@@ -4,7 +4,7 @@ These instructions apply to the entire repository. Follow the user's current ins
 
 ## Product and scope
 
-ZotMacros is a native Android nutrition tracker for UC Irvine students. Its core flow is real dining menu → food → serving quantity → persistent diary → updated daily totals.
+ZotMacros is a native Android nutrition tracker for UC Irvine students, built for all modern Android phones — varied screen sizes, densities, and supported API levels, never a single device model. Its core flow is real dining menu → food → serving quantity → persistent diary → updated daily totals.
 
 This branch (`android`) is the Android source of truth. Work on `app/` and shared docs (`PRODUCT.md`, `DESIGN.md`, `docs/`, `website/`) here. `ios/` is owned by the `ios` branch — treat it as read-only reference on this branch and do not modify it here.
 
@@ -53,13 +53,15 @@ Test fixtures belong only in test source sets. Never seed production diaries or 
 
 Use Material 3 components and role-based colors from `ui/Theme.kt`. Preserve the approved blue surfaces, gold selected controls and primary actions, and labeled macro colors. Use Android system typography, scalable `sp`, minimum 48dp touch targets, and system/keyboard insets.
 
+Design responsive layouts that work on any modern phone: no hardcoded dimensions tuned to one device; use adaptive layouts and window size classes, scrollable content, and edge-to-edge handling for cutouts and system bars. Support portrait and landscape, small phones through large phones and foldables, and all screen densities. Never assume a Pixel 8 Pro screen size, density, or API level.
+
 Keep Today, Menu, History, and Settings accessible through navigation. Honor system Back. Food sheets must keep their save action reachable while details scroll. Include loading, empty, unavailable, retry, cached/stale, and saving states. Goals must be clearly labeled as examples until accepted or personalized. Destructive history deletion requires confirmation.
 
-Check changed native screens on an emulator or device, including larger font sizes. Use native screenshots, not browser renders, as evidence. Do not claim physical-device verification from emulator tests.
+Verify changed screens across a device matrix, not one phone: a small-screen and a large-screen emulator, min SDK 26 through the current target SDK, plus larger font sizes. Use native screenshots, not browser renders, as evidence. Do not claim physical-device verification from emulator tests.
 
 ## Build and verification
 
-Use JDK 17, Android SDK 35, Build Tools 35.0.0, and the committed Gradle wrapper. Minimum SDK is 26. Let Android Studio create `local.properties`, or set its `sdk.dir` to the local SDK. Never commit machine-specific SDK/JDK paths.
+Use JDK 17, Android SDK 35, Build Tools 35.0.0, and the committed Gradle wrapper. Minimum SDK is 26, and the app must install and run cleanly on every API level from 26 through the current target SDK. Let Android Studio create `local.properties`, or set its `sdk.dir` to the local SDK. Never commit machine-specific SDK/JDK paths.
 
 Standard checks:
 
