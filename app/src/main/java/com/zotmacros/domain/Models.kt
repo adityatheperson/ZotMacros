@@ -26,6 +26,16 @@ fun mealForPeriod(name: String): Meal = when {
     else -> Meal.SNACKS
 }
 fun hallName(id: String): String = if (id == "brandywine") "Brandywine" else "Anteatery"
+/** Foods served all day also appear under their meal periods upstream; keep them only in All Day. */
+fun dedupeAllDayOverlaps(periods: List<MenuPeriod>): List<MenuPeriod> {
+    val allDay = periods.filter { it.name.equals("All Day", true) }.flatMap { it.foods }.map { it.stationId to it.dish.id }.toSet()
+    if (allDay.isEmpty()) return periods
+    val meals = setOf("lunch", "dinner", "brunch")
+    return periods.map { period ->
+        if (period.name.lowercase() in meals) period.copy(foods = period.foods.filter { (it.stationId to it.dish.id) !in allDay })
+        else period
+    }
+}
 fun choosePeriod(periods: List<MenuPeriod>, preference: String, time: LocalTime): String? {
     if (preference != "Automatic") periods.firstOrNull { it.name.equals(preference, true) }?.let { return it.id }
     return periods.firstOrNull {

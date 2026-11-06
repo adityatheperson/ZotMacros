@@ -28,7 +28,7 @@ import java.time.format.DateTimeFormatter
         ?: periods.firstOrNull { it.id == choosePeriod(periods, prefs.meal, now.atZone(CampusZone).toLocalTime()) }
     var selectedStation by rememberSaveable(state.hall, state.snapshot?.date, period?.id) { mutableStateOf<String?>(null) }
     val stations = period?.foods.orEmpty().distinctBy { it.stationId }
-    val effectiveStation = selectedStation?.takeIf { id -> stations.any { it.stationId == id } }
+    val effectiveStation = selectedStation?.takeIf { id -> stations.any { it.stationId == id } } ?: stations.firstOrNull()?.stationId
     val foods = period?.foods.orEmpty().filter { (effectiveStation == null || it.stationId == effectiveStation) && it.dish.name.contains(query, true) }
     PullToRefreshBox(isRefreshing = state.loading, onRefresh = onRefresh, modifier = Modifier.fillMaxSize()) {
         LazyColumn(Modifier.fillMaxSize(), contentPadding = PaddingValues(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
@@ -47,7 +47,6 @@ import java.time.format.DateTimeFormatter
                 placeholder = { Text("Search this menu") }, leadingIcon = { Icon(Icons.Outlined.Search, null) }, shape = RoundedCornerShape(16.dp)) }
             item { Attribution() }
             if (stations.isNotEmpty()) item { LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                item { FilterChip(effectiveStation == null, { selectedStation = null }, label = { Text("All stations") }) }
                 items(stations, key = { it.stationId }) { s -> FilterChip(effectiveStation == s.stationId, { selectedStation = s.stationId }, label = { Text(s.station) }) }
             } }
             item {

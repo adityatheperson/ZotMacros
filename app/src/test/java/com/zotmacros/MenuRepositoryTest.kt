@@ -54,4 +54,20 @@ class MenuRepositoryTest {
         assertNotNull(result.error)
         assertTrue(result.cached)
     }
+    @Test fun allDayFoodsRemovedFromLunchDinnerAndBrunch() {
+        fun food(id: String, station: String) = MenuFood(Dish(id, "Food $id"), station, "Station $station")
+        val periods = listOf(
+            MenuPeriod("a", "All Day", foods = listOf(food("d1", "s1"), food("d2", "s2"))),
+            MenuPeriod("l", "Lunch", foods = listOf(food("d1", "s1"), food("d3", "s3"))),
+            MenuPeriod("d", "Dinner", foods = listOf(food("d2", "s2"))),
+            MenuPeriod("b", "Brunch", foods = listOf(food("d1", "s9"))),
+            MenuPeriod("k", "Breakfast", foods = listOf(food("d1", "s1")))
+        )
+        val result = dedupeAllDayOverlaps(periods)
+        assertEquals(listOf("d1", "d2"), result[0].foods.map { it.dish.id })
+        assertEquals(listOf("d3"), result[1].foods.map { it.dish.id })
+        assertTrue(result[2].foods.isEmpty())
+        assertEquals(listOf("d1"), result[3].foods.map { it.dish.id })
+        assertEquals(listOf("d1"), result[4].foods.map { it.dish.id })
+    }
 }

@@ -26,11 +26,11 @@ class MenuRepository @Inject constructor(
             val periods = parser.day(api.day(hall, date), hall)
             val ids = periods.flatMap { it.stations.values.flatten() }.distinct()
             val dishes = ids.chunked(20).flatMap { parser.dishes(api.dishes(it.joinToString(","))) }.associateBy { it.id }
-            val snapshot = MenuSnapshot(hall, date, System.currentTimeMillis(), periods.map { period ->
+            val snapshot = MenuSnapshot(hall, date, System.currentTimeMillis(), dedupeAllDayOverlaps(periods.map { period ->
                 MenuPeriod(period.id, period.name, period.start, period.end, period.stations.flatMap { (stationId, dishIds) ->
                     dishIds.mapNotNull { id -> dishes[id]?.let { MenuFood(it, stationId, stationNames[stationId] ?: "Station $stationId") } }
                 })
-            }, ids.count { it !in dishes })
+            }), ids.count { it !in dishes })
             dao.put(CachedMenu(hall, date, snapshot.fetchedAt, json.encodeToString(snapshot)))
             MenuResult(snapshot)
         } catch (e: CancellationException) { throw e }
