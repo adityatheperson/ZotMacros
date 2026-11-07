@@ -14,7 +14,7 @@ Before changing behavior or design, read:
 - `DESIGN.md` and `docs/design/approved-mockup.png` for the approved visual direction.
 - `docs/API.md` for the verified Anteater API contract.
 
-The approved lighter UCI blue-and-gold design supersedes the original brief's lime palette. Mockup nutrition values are illustrative, never production data. Keep the app native; do not replace Compose with a website or WebView. Accounts, payments, ads, cloud sync, barcode scanning, and AI coaching are outside the MVP unless requested.
+The approved lighter UCI blue-and-gold design supersedes the original brief's lime palette. Mockup nutrition values are illustrative, never production data. Keep the app native; do not replace Compose with a website or WebView. Accounts, payments, ads, cloud sync, barcode scanning, and AI coaching are outside the MVP unless requested. Menus come solely from the Anteater API — do not add secondary menu sources. The station filter always has exactly one station selected (no 'All stations' option; defaults to the first station). Foods served all day appear only under All Day, never duplicated into Lunch, Dinner, or Brunch (see `dedupeAllDayOverlaps`).
 
 ## Architecture
 
@@ -57,11 +57,13 @@ Design responsive layouts that work on any modern phone: no hardcoded dimensions
 
 Keep Today, Menu, History, and Settings accessible through navigation. Honor system Back. Food sheets must keep their save action reachable while details scroll. Include loading, empty, unavailable, retry, cached/stale, and saving states. Goals must be clearly labeled as examples until accepted or personalized. Destructive history deletion requires confirmation.
 
-Verify changed screens across a device matrix, not one phone: a small-screen and a large-screen emulator, min SDK 26 through the current target SDK, plus larger font sizes. Use native screenshots, not browser renders, as evidence. Do not claim physical-device verification from emulator tests.
+Verify changed screens across a device matrix, not one phone: both lab AVDs (`Pixel8Pro` and `GalaxyS25`), min SDK 26 through the current target SDK, plus larger font sizes. Use native screenshots, not browser renders, as evidence. Do not claim physical-device verification from emulator tests.
 
 ## Build and verification
 
 Use JDK 17, Android SDK 35, Build Tools 35.0.0, and the committed Gradle wrapper. Minimum SDK is 26, and the app must install and run cleanly on every API level from 26 through the current target SDK. Let Android Studio create `local.properties`, or set its `sdk.dir` to the local SDK. Never commit machine-specific SDK/JDK paths.
+
+Local device lab (this Mac): SDK at `$HOME/Library/Android/sdk` (`local.properties` sets `sdk.dir`; untracked). Run Gradle under JDK 17 (e.g. Homebrew `openjdk@17` via `JAVA_HOME`), not whatever system Java is newest. AVDs: `Pixel8Pro` (pixel_8_pro profile, API 35) and `GalaxyS25` (1080x2340 @ 420dpi, API 35). Launch with `$ANDROID_HOME/emulator/emulator -avd <name>` (add `-no-window -no-audio` for headless); address one device with `adb -s <serial>`.
 
 Standard checks:
 
