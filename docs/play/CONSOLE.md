@@ -6,6 +6,7 @@
 - [x] 16 KB page-size alignment verified on arm64 `.so` files in the release AAB
 - [x] Signed release AAB builds (`bundleRelease`; upload keystore outside git, password in keychain)
 - [x] In-app privacy policy link (Settings → Privacy policy; constant `PrivacyPolicyUrl`)
+- [x] Device suite (6 tests, 0 failures) + visual launch verified on the API 36 emulator (`Pixel8Pro36`)
 - [x] `website/privacy.html` drafted — must be hosted before submission
 - [x] No accounts/ads/analytics/crash SDKs; diary on-device only with in-app deletion
 - [x] Phone screenshots for this release (`docs/play-listing/`: Today, live Menu, FoodSheet, logged Today, History, Settings)

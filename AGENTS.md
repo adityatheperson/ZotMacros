@@ -63,7 +63,7 @@ Verify changed screens across a device matrix, not one phone: both lab AVDs (`Pi
 
 Use JDK 17, Android SDK 36, Build Tools 36.0.0, and the committed Gradle wrapper. Minimum SDK is 26, and the app must install and run cleanly on every API level from 26 through the current target SDK. Let Android Studio create `local.properties`, or set its `sdk.dir` to the local SDK. Never commit machine-specific SDK/JDK paths.
 
-Local device lab (this Mac): SDK at `$HOME/Library/Android/sdk` (`local.properties` sets `sdk.dir`; untracked). Run Gradle under JDK 17 (e.g. Homebrew `openjdk@17` via `JAVA_HOME`), not whatever system Java is newest. AVDs: `Pixel8Pro` (pixel_8_pro profile, API 35) and `GalaxyS25` (1080x2340 @ 420dpi, API 35). Launch with `$ANDROID_HOME/emulator/emulator -avd <name>` (add `-no-window -no-audio` for headless); address one device with `adb -s <serial>`.
+Local device lab (this Mac): SDK at `$HOME/Library/Android/sdk` (`local.properties` sets `sdk.dir`; untracked). Run Gradle under JDK 17 (e.g. Homebrew `openjdk@17` via `JAVA_HOME`), not whatever system Java is newest. AVDs: `Pixel8Pro` (pixel_8_pro profile, API 35), `GalaxyS25` (1080x2340 @ 420dpi, API 35), and `Pixel8Pro36` (pixel_8_pro profile, API 36) for target-SDK validation. Launch with `$ANDROID_HOME/emulator/emulator -avd <name>` (add `-no-window -no-audio` for headless); address one device with `adb -s <serial>`.
 
 Standard checks:
 
