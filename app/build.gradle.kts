@@ -8,16 +8,32 @@ plugins {
 }
 android {
     namespace = "com.zotmacros"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig {
         applicationId = "com.zotmacros"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 3
         versionName = "1.0.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     buildFeatures { compose = true }
+    val releaseKsPath = System.getenv("ZOT_KEYSTORE_PATH") ?: (findProperty("zot.keystore.path") as String?)
+    signingConfigs {
+        create("release") {
+            if (releaseKsPath != null) {
+                storeFile = file(releaseKsPath)
+                storePassword = System.getenv("ZOT_KEYSTORE_PASSWORD") ?: (findProperty("zot.keystore.password") as String?)
+                keyAlias = System.getenv("ZOT_KEY_ALIAS") ?: ((findProperty("zot.key.alias") as String?) ?: "zotmacros-upload")
+                keyPassword = System.getenv("ZOT_KEY_PASSWORD") ?: (findProperty("zot.key.password") as String?)
+            }
+        }
+    }
+    buildTypes {
+        release {
+            if (releaseKsPath != null) signingConfig = signingConfigs.getByName("release")
+        }
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

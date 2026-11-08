@@ -34,6 +34,14 @@ fun nutrientText(value: Double?, nutrient: Nutrient): String = value?.let { "${n
         Spacer(Modifier.width(6.dp)); Icon(Icons.AutoMirrored.Outlined.OpenInNew, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
+const val PrivacyPolicyUrl = "https://adityatheperson.github.io/ZotMacros/privacy.html"
+@Composable fun PrivacyPolicy() {
+    val uri = LocalUriHandler.current
+    TextButton(onClick = { uri.openUri(PrivacyPolicyUrl) }) {
+        Text("Privacy policy", color = MaterialTheme.colorScheme.onSurfaceVariant)
+        Spacer(Modifier.width(6.dp)); Icon(Icons.AutoMirrored.Outlined.OpenInNew, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
 @Composable fun Brand(modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Z", color = Gold, style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Black)

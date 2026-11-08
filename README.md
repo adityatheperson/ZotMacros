@@ -8,7 +8,7 @@ The locally generated debug APK is at `artifacts/ZotMacros-debug.apk` (excluded 
 
 ## Build and install
 
-Open this folder in Android Studio with **JDK 17**, Android SDK **35**, and Build Tools **35.0.0** installed. Set `sdk.dir` in your untracked `local.properties` to your Android SDK location (Android Studio normally does this automatically).
+Open this folder in Android Studio with **JDK 17**, Android SDK **36**, and Build Tools **36.0.0** installed. Set `sdk.dir` in your untracked `local.properties` to your Android SDK location (Android Studio normally does this automatically).
 
 ```sh
 ./gradlew :app:testDebugUnitTest :app:lintDebug :app:assembleDebug
