@@ -6,7 +6,7 @@ These instructions apply to the entire repository. Follow the user's current ins
 
 ZotMacros is a native Android nutrition tracker for UC Irvine students, built for all modern Android phones — varied screen sizes, densities, and supported API levels, never a single device model. Its core flow is real dining menu → food → serving quantity → persistent diary → updated daily totals.
 
-This branch (`experiment/uci-supplement`) is Android-only: it contains `app/` and shared docs, with no `ios/` or `website/` directories. iOS work stays on the `ios` branch; website work stays on `android` (which deploys it).
+This branch (`andriod-uci-suppliment`) is Android-only: it contains `app/` and shared docs, with no `ios/` or `website/` directories. iOS work stays on the `ios` branch; website work stays on `android` (which deploys it).
 
 Before changing behavior or design, read:
 - `PRODUCT.md` for product scope.
@@ -92,7 +92,7 @@ Report commands actually run and their outcomes. `docs/verification/RESULTS.md` 
 
 ## Repository hygiene and handoff
 
-Work directly on `experiment/uci-supplement`. Do not create `codex/` or other feature branches unless the user explicitly asks. Keep unrelated changes out of commits. Do not force-push or discard user work.
+Work directly on `andriod-uci-suppliment`. Do not create `codex/` or other feature branches unless the user explicitly asks. Keep unrelated changes out of commits. Do not force-push or discard user work.
 
 Do not commit SDKs, build caches, `local.properties`, generated APKs, signing keys, credentials, or device databases. Keep the Gradle wrapper JAR, exported Room schemas, tests, approved design, and useful documentation tracked. Generated APKs belong in local build output or an explicitly requested release artifact, not source history.
 
