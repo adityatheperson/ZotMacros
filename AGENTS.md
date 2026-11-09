@@ -1,25 +1,33 @@
-# Working on ZotMacros
+# Working on ZotMacros (Android)
 
-These instructions apply to the entire repository. Follow the user's current instructions when they override this guidance.
+These instructions apply to the `android` branch. Follow the user's current instructions when they override this guidance.
 
 ## Product and scope
 
 ZotMacros is a native Android nutrition tracker for UC Irvine students, built for all modern Android phones — varied screen sizes, densities, and supported API levels, never a single device model. Its core flow is real dining menu → food → serving quantity → persistent diary → updated daily totals.
 
-This branch (`android`) is the Android source of truth. Work on `app/` and shared docs (`PRODUCT.md`, `DESIGN.md`, `docs/`, `website/`) here. `ios/` is owned by the `ios` branch — treat it as read-only reference on this branch and do not modify it here.
+Branch map (do not reorganize without being asked):
+- `android` (this branch): source of truth for the Android app (`app/`), shared docs (`PRODUCT.md`, `DESIGN.md`, `docs/`), and `website/` (deployed to GitHub Pages from here).
+- `ios`: the iPhone app. Read-only reference on this branch — never modify it here.
+- `andriod-uci-suppliment`: Android-only experiment restoring the Adobe menu supplement. Hands off — do not merge it into `android` without explicit user approval.
+- `ios-uci-supplement`: iOS-side experiment. Ignore on this branch.
+- `adityatheperson/website`: website workspace branch.
+
+Product decisions in force on this branch: menus come solely from the Anteater API (no secondary menu sources); the station filter always has exactly one station selected (no 'All stations' option, defaults to the first station); foods served all day appear only under All Day, never duplicated into Lunch, Dinner, or Brunch (see `dedupeAllDayOverlaps`).
 
 Before changing behavior or design, read:
 - `PRODUCT.md` for product scope.
 - `docs/REQUIREMENTS.md` for the original MVP requirements.
 - `DESIGN.md` and `docs/design/approved-mockup.png` for the approved visual direction.
 - `docs/API.md` for the verified Anteater API contract.
+- `docs/play/` for Play Store listing, data-safety, and launch-checklist answers.
 
-The approved lighter UCI blue-and-gold design supersedes the original brief's lime palette. Mockup nutrition values are illustrative, never production data. Keep the app native; do not replace Compose with a website or WebView. Accounts, payments, ads, cloud sync, barcode scanning, and AI coaching are outside the MVP unless requested. Menus come solely from the Anteater API — do not add secondary menu sources. The station filter always has exactly one station selected (no 'All stations' option; defaults to the first station). Foods served all day appear only under All Day, never duplicated into Lunch, Dinner, or Brunch (see `dedupeAllDayOverlaps`).
+The approved lighter UCI blue-and-gold design supersedes the original brief's lime palette. Mockup nutrition values are illustrative, never production data. Keep the app native; do not replace Compose with a website or WebView. Accounts, payments, ads, cloud sync, barcode scanning, and AI coaching are outside the MVP unless requested.
 
 ## Architecture
 
 The application module is `app`, package `com.zotmacros`.
-- `domain/`: pure nutrition calculations, menu models, meal selection, and campus date rules.
+- `domain/`: pure nutrition calculations, menu models, meal selection, All-Day dedup, and campus date rules.
 - `data/`: Retrofit/OkHttp, defensive Kotlinx JSON parsing, Room diary/menu cache, DataStore preferences, repositories, and Hilt bindings.
 - `ui/`: Jetpack Compose Material 3 screens, theme, Navigation Compose, and lifecycle-aware ViewModel/StateFlow state.
 - `app/src/test/`: local JVM tests and API fixtures.
@@ -43,6 +51,8 @@ Keep network and database work out of composables. Preserve coroutine cancellati
 
 ## API changes
 
+Menus come solely from the Anteater API; `docs/API.md` is the contract. Do not add secondary menu sources on this branch.
+
 Verify current official documentation at `https://anteaterapi.com/reference` / `https://anteaterapi.com/openapi.json` before changing integration assumptions. Production base URL: `https://anteaterapi.com/v2/rest/`.
 
 Use returned meal periods and station mappings; do not assume only Breakfast/Lunch/Dinner exist. Deduplicate dish IDs and batch requests. Respect rate limits and preserve cached data on failures. Keep linked “Data from Anteater API” attribution near search/data surfaces and in About; see `docs/API.md`.
@@ -57,13 +67,13 @@ Design responsive layouts that work on any modern phone: no hardcoded dimensions
 
 Keep Today, Menu, History, and Settings accessible through navigation. Honor system Back. Food sheets must keep their save action reachable while details scroll. Include loading, empty, unavailable, retry, cached/stale, and saving states. Goals must be clearly labeled as examples until accepted or personalized. Destructive history deletion requires confirmation.
 
-Verify changed screens across a device matrix, not one phone: both lab AVDs (`Pixel8Pro` and `GalaxyS25`), min SDK 26 through the current target SDK, plus larger font sizes. Use native screenshots, not browser renders, as evidence. Do not claim physical-device verification from emulator tests.
+Verify changed screens across a device matrix, not one phone: the lab AVDs (`Pixel8Pro`, `GalaxyS25`, `Pixel8Pro36`), min SDK 26 through the current target SDK, plus larger font sizes. Use native screenshots, not browser renders, as evidence. Do not claim physical-device verification from emulator tests.
 
 ## Build and verification
 
 Use JDK 17, Android SDK 36, Build Tools 36.0.0, and the committed Gradle wrapper. Minimum SDK is 26, and the app must install and run cleanly on every API level from 26 through the current target SDK. Let Android Studio create `local.properties`, or set its `sdk.dir` to the local SDK. Never commit machine-specific SDK/JDK paths.
 
-Local device lab (this Mac): SDK at `$HOME/Library/Android/sdk` (`local.properties` sets `sdk.dir`; untracked). Run Gradle under JDK 17 (e.g. Homebrew `openjdk@17` via `JAVA_HOME`), not whatever system Java is newest. AVDs: `Pixel8Pro` (pixel_8_pro profile, API 35), `GalaxyS25` (1080x2340 @ 420dpi, API 35), and `Pixel8Pro36` (pixel_8_pro profile, API 36) for target-SDK validation. Launch with `$ANDROID_HOME/emulator/emulator -avd <name>` (add `-no-window -no-audio` for headless); address one device with `adb -s <serial>`.
+Local device lab (this Mac): SDK at `$HOME/Library/Android/sdk` (`local.properties` sets `sdk.dir`; untracked). Run Gradle under JDK 17 (e.g. Homebrew `openjdk@17` via `JAVA_HOME`), not whatever system Java is newest. Launch with `$ANDROID_HOME/emulator/emulator -avd <name>` (add `-no-window -no-audio` for headless); address one device with `adb -s <serial>`.
 
 Standard checks:
 
@@ -88,12 +98,14 @@ adb shell am instrument -w com.zotmacros.test/androidx.test.runner.AndroidJUnitR
 
 Use `adb -s <serial>` when multiple devices are attached. Prefer an emulator for tests that clear data or alter connectivity/font settings; restore settings afterward. Test calculation/parser/repository changes with focused regression cases and run the relevant full suite. Run lint and assembly for native UI or configuration changes. Documentation-only edits need link/content checks, not new application tests.
 
+Release builds: `bundleRelease` signs with the upload keystore via `ZOT_KEYSTORE_*` env vars (keystore lives outside git; password in keychain). Never commit keys or passwords.
+
 Report commands actually run and their outcomes. `docs/verification/RESULTS.md` records the MVP's historical verification, not proof for later changes. Do not overwrite prior evidence as if it verified a different build.
 
 ## Repository hygiene and handoff
 
-Work directly on `android`. The repository has only two branches (`android`, `ios`); do not create `codex/` or other feature branches unless the user explicitly asks. Keep unrelated changes out of commits. Do not force-push or discard user work.
+Work directly on `android`. Do not create new branches, merge the experiment branches, or reorganize branch ownership unless the user explicitly asks. Keep unrelated changes out of commits. Do not force-push or discard user work.
 
-Do not commit SDKs, build caches, `local.properties`, generated APKs, signing keys, credentials, or device databases. Keep the Gradle wrapper JAR, exported Room schemas, tests, approved design, and useful documentation tracked. Generated APKs belong in local build output or an explicitly requested release artifact, not source history.
+Do not commit SDKs, build caches, `local.properties`, generated APKs/AABs, signing keys, credentials, or device databases. Keep the Gradle wrapper JAR, exported Room schemas, tests, approved design, and useful documentation tracked. Generated APKs/AABs belong in local build output or an explicitly requested release artifact, not source history.
 
 Before handoff, check the diff and repository status, summarize the user-visible changes and verification, and state material limits. Push, merge, or publish when the user authorizes that action; never claim a push succeeded without checking the remote result.
