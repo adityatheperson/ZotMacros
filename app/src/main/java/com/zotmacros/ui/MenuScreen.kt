@@ -45,7 +45,7 @@ import java.time.format.DateTimeFormatter
             }
             item { OutlinedTextField(query, onValueChange = { query = it }, modifier = Modifier.fillMaxWidth(), singleLine = true,
                 placeholder = { Text("Search this menu") }, leadingIcon = { Icon(Icons.Outlined.Search, null) }, shape = RoundedCornerShape(16.dp)) }
-            item { Attribution() }
+            item { Attribution(); UciAttribution() }
             if (stations.isNotEmpty()) item { LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(stations, key = { it.stationId }) { s -> FilterChip(effectiveStation == s.stationId, { selectedStation = s.stationId }, label = { Text(s.station) }) }
             } }

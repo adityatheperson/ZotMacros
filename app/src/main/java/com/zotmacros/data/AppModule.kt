@@ -17,6 +17,7 @@ import javax.inject.Singleton
 
 @Module @InstallIn(SingletonComponent::class)
 object AppModule {
+    @Provides @Singleton fun supplement(json: Json): SupplementSource = SupplementSource(json)
     @Provides @Singleton fun json(): Json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
     @Provides @Singleton fun db(@ApplicationContext context: Context): ZotDatabase =
         Room.databaseBuilder(context, ZotDatabase::class.java, "zotmacros.db").build()

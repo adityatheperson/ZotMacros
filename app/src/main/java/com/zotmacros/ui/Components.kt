@@ -42,6 +42,12 @@ const val PrivacyPolicyUrl = "https://adityatheperson.github.io/ZotMacros/privac
         Spacer(Modifier.width(6.dp)); Icon(Icons.AutoMirrored.Outlined.OpenInNew, null, Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }
+@Composable fun UciAttribution() {
+    val uri = LocalUriHandler.current
+    TextButton(onClick = { uri.openUri("https://uci.mydininghub.com/") }) {
+        Text("Additional menu foods from UCI Dining", color = MaterialTheme.colorScheme.onSurfaceVariant)
+    }
+}
 @Composable fun Brand(modifier: Modifier = Modifier) {
     Row(modifier, verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Z", color = Gold, style = MaterialTheme.typography.headlineLarge, fontWeight = FontWeight.Black)

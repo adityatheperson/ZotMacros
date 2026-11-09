@@ -14,7 +14,7 @@ data class MenuFood(val dish: Dish, val stationId: String, val station: String)
 @Serializable
 data class MenuPeriod(val id: String, val name: String, val start: String? = null, val end: String? = null, val foods: List<MenuFood> = emptyList())
 @Serializable
-data class MenuSnapshot(val hall: String, val date: String, val fetchedAt: Long, val periods: List<MenuPeriod>, val unavailableDishes: Int = 0)
+data class MenuSnapshot(val hall: String, val date: String, val fetchedAt: Long, val periods: List<MenuPeriod>, val unavailableDishes: Int = 0, val supplementVerified: Boolean = false)
 
 data class MenuResult(val snapshot: MenuSnapshot?, val error: String? = null, val cached: Boolean = false)
 @Serializable
